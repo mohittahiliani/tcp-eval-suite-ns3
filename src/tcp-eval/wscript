@@ -16,6 +16,7 @@ def build(bld):
     headers.source = [
         'model/configure-topology.h',
         'model/dumbbell-topology.h',
+        'model/parking-lot-topology.h',
         ]
 
     # bld.ns3_python_bindings()
