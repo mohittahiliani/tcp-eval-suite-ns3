@@ -15,6 +15,7 @@ def build(bld):
     headers.module = 'tcp-eval'
     headers.source = [
         'model/configure-topology.h',
+        'model/dumbbell-topology.h',
         ]
 
     # bld.ns3_python_bindings()
