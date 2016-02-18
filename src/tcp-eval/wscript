@@ -10,7 +10,8 @@ def build(bld):
     module = bld.create_ns3_module('tcp-eval', ['core'])
     module.source = [
         'model/configure-topology.cc',
-        'model/dumbbell-topology.cc',     
+        'model/dumbbell-topology.cc',
+        'model/parking-lot-topology.cc',     
         ]
 
     headers = bld(features='ns3header')
