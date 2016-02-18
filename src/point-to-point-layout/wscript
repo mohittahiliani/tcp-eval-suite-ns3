@@ -7,6 +7,7 @@ def build(bld):
         'model/point-to-point-dumbbell.cc',
         'model/point-to-point-grid.cc',
         'model/point-to-point-star.cc',
+        'model/point-to-point-parking-lot.cc',
         ]
 
     headers = bld(features='ns3header')
