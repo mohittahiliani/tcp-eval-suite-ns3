@@ -36,6 +36,7 @@
 #include "ns3/netanim-module.h"
 #include "ns3/applications-module.h"
 #include "ns3/point-to-point-layout-module.h"
+#include "ns3/evalstats.h"
 
 namespace ns3 {
 
@@ -190,6 +191,11 @@ ParkingLotTopology::CreateParkingLotTopology (Ptr<TrafficParameters> trafficPara
     }
 
   Ipv4GlobalRoutingHelper::PopulateRoutingTables ();
+
+  // Push the stats of left most router to a file
+  Ptr<Node> left = parkingLot.GetRouter (0);
+  Ptr<LinkStats> linkstats = CreateObject<LinkStats> (m_bottleneckBandwidth, fileName);
+  linkstats->Install (left, trafficParams);
 
   Simulator::Run ();
   Simulator::Destroy ();
