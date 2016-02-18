@@ -8,7 +8,8 @@
 
 def build(bld):
     module = bld.create_ns3_module('tcp-eval', ['core'])
-    module.source = [      
+    module.source = [
+        'model/configure-topology.cc',     
         ]
 
     headers = bld(features='ns3header')
