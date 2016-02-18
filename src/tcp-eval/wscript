@@ -11,7 +11,8 @@ def build(bld):
     module.source = [
         'model/configure-topology.cc',
         'model/dumbbell-topology.cc',
-        'model/parking-lot-topology.cc',     
+        'model/parking-lot-topology.cc',
+        'model/traffic-parameters.cc',     
         ]
 
     headers = bld(features='ns3header')
