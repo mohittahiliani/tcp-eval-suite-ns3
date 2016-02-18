@@ -18,6 +18,7 @@ def build(bld):
         'model/dumbbell-topology.h',
         'model/parking-lot-topology.h',
         'model/traffic-parameters.h',
+        'model/create-traffic.h',
         ]
 
     # bld.ns3_python_bindings()
