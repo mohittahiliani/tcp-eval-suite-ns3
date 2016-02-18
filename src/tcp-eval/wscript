@@ -12,7 +12,8 @@ def build(bld):
         'model/configure-topology.cc',
         'model/dumbbell-topology.cc',
         'model/parking-lot-topology.cc',
-        'model/traffic-parameters.cc',     
+        'model/traffic-parameters.cc',
+        'model/create-traffic.cc',     
         ]
 
     headers = bld(features='ns3header')
