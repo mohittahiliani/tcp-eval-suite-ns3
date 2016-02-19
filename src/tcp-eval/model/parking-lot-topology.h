@@ -71,19 +71,11 @@ public:
   std::string to_string (const T& data);
 
   /**
-   * \brief Calls a private method CreateParkingLotTopology
+   * \brief Set delay of cross links in seconds
    *
-   * This method is declared virtual in ConfigureTopology class. TCP evaluation topologies like
-   * dumbbell and parking-lot can use this method to configure traffic parameters and invoke the private
-   * methods of their class. 
-   * 
-   * \param traffic Object of TrafficParameters class that contains the 
-   *                information of traffic related parameters.
-   * \param createGraph Object of CreateGraph class that contains the 
-   *                    information of graph related parameters.
-   * \param fileName the name of the file where stats are dumped.
+   * \param crossLinkDelay delay of cross links in seconds
    */
-  void CreateTopology (Ptr<TrafficParameters> traffic, Ptr<CreateGraph> createGraph, std::string fileName);
+  void SetCrossLinkDelay (Time crossLinkDelay);
 
   /**
    * \brief Get delay of cross links in seconds
@@ -92,9 +84,6 @@ public:
    */
   Time GetCrossLinkDelay (void) const;
 
-private:
-  Time     m_crossLinkDelay;      //!< Cross link Delay in ms
-
   /**
    * \brief Invokes methods for creating parking-lot topology and simulating traffic
    *
@@ -102,13 +91,16 @@ private:
    * to create traffic on this topology. Finally, this method invokes Stats class to trace the
    * required statistics.
    *
-   * \param traffic Object of TrafficParameters class that contains the 
+   * \param traffic Object of TrafficParameters class that contains the
    *                information of traffic related parameters.
-   * \param createGraph Object of CreateGraph class that contains the 
+   * \param createGraph Object of CreateGraph class that contains the
    *                    information of graph related parameters.
    * \param fileName the name of the file where stats are dumped.
    */
   void CreateParkingLotTopology (Ptr<TrafficParameters> traffic, Ptr<CreateGraph> createGraph, std::string fileName);
+
+private:
+  Time     m_crossLinkDelay;      //!< Cross link Delay in seconds
 };
 
 }

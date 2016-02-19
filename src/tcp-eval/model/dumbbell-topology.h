@@ -38,7 +38,7 @@ namespace ns3 {
  *  It extends ConfigureTopology and invokes PointToPointDumbbellHelper to create a
  *  the topology. Total number of left and right nodes are created by considering
  *  all different types of traffic flows configured by the user.
- *  Example: if there are 5 forwardFtp flows, 4 reverseFtp flows and 2 voiceFlows, 
+ *  Example: if there are 5 forwardFtp flows, 4 reverseFtp flows and 2 voiceFlows,
  *  nodes 0-4 initiate forwardFtp flows (left -> right), nodes 5-8 initiate reverseFtp
  *  flows (right -> left) and nodes 9-10 initiate voiceFlows (left <-> right)
  */
@@ -73,31 +73,15 @@ public:
   std::string to_string (const T& data);
 
   /**
-   * \brief Calls a private method CreateDumbbellTopology
-   *
-   * This method is declared virtual in ConfigureTopology class. TCP evaluation topologies like
-   * dumbbell and parking-lot can use this method to configure traffic parameters and invoke the private
-   * methods of their class. 
-   * 
-   * \param traffic Object of TrafficParameters class that contains the 
-   *                information of traffic related parameters.
-   * \param createGraph Object of CreateGraph class that contains the 
-   *                    information of graph related parameters.
-   * \param fileName the name of the file where stats are dumped.
-   */
-  void CreateTopology (Ptr<TrafficParameters> traffic, Ptr<CreateGraph> createGraph, std::string fileName);
-
-private:
-  /**
    * \brief Invokes methods for creating dumbbell topology and simulating traffic
    *
    * It configures PointToPointChannel, invokes topology creation class and then calls methods
    * to create traffic on this topology. Finally, this method invokes Stats class to trace the
    * required statistics.
    *
-   * \param traffic Object of TrafficParameters class that contains the 
+   * \param traffic Object of TrafficParameters class that contains the
    *                information of traffic related parameters.
-   * \param createGraph Object of CreateGraph class that contains the 
+   * \param createGraph Object of CreateGraph class that contains the
    *                    information of graph related parameters.
    * \param fileName the name of the file where stats are dumped.
    */

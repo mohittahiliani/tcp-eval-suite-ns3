@@ -200,7 +200,6 @@ CreateTraffic::CreateFwdStreamingTraffic (PointToPointDumbbellHelper dumbbell, u
       sourceAndSinkApp.Add (streaming.Install (dumbbell.GetLeft (i)));
 
       PacketSinkHelper packetSink ("ns3::UdpSocketFactory",InetSocketAddress (dumbbell.GetRightIpv4Address (i), port1));
-      packetSink.SetAttribute ("Protocol", TypeIdValue (TcpSocketFactory::GetTypeId ()));
       sourceAndSinkApp.Add (packetSink.Install (dumbbell.GetRight (i)));
 
       sourceAndSinkApp.Start (Seconds (GetRandomValue ()));
@@ -230,7 +229,6 @@ CreateTraffic::CreateRevStreamingTraffic (PointToPointDumbbellHelper dumbbell, u
       sourceAndSinkApp.Add (streaming.Install (dumbbell.GetRight (i)));
 
       PacketSinkHelper packetSink ("ns3::UdpSocketFactory",InetSocketAddress (dumbbell.GetLeftIpv4Address (i), port1));
-      packetSink.SetAttribute ("Protocol", TypeIdValue (TcpSocketFactory::GetTypeId ()));
       sourceAndSinkApp.Add (packetSink.Install (dumbbell.GetLeft (i)));
 
       sourceAndSinkApp.Start (Seconds (GetRandomValue ()));
@@ -371,7 +369,6 @@ CreateTraffic::CreateFwdStreamingTrafficParking (PointToPointParkingLotHelper pa
       sourceAndSinkApp.Add (streaming.Install (parkingLot.GetLeft (i)));
 
       PacketSinkHelper packetSink ("ns3::UdpSocketFactory",InetSocketAddress (parkingLot.GetRightIpv4Address (i), port1));
-      packetSink.SetAttribute ("Protocol", TypeIdValue (TcpSocketFactory::GetTypeId ()));
       sourceAndSinkApp.Add (packetSink.Install (parkingLot.GetRight (i)));
 
       sourceAndSinkApp.Start (Seconds (GetRandomValue ()));
@@ -401,7 +398,6 @@ CreateTraffic::CreateRevStreamingTrafficParking (PointToPointParkingLotHelper pa
       sourceAndSinkApp.Add (streaming.Install (parkingLot.GetRight (i)));
 
       PacketSinkHelper packetSink ("ns3::UdpSocketFactory",InetSocketAddress (parkingLot.GetLeftIpv4Address (i), port1));
-      packetSink.SetAttribute ("Protocol", TypeIdValue (TcpSocketFactory::GetTypeId ()));
       sourceAndSinkApp.Add (packetSink.Install (parkingLot.GetLeft (i)));
 
       sourceAndSinkApp.Start (Seconds (GetRandomValue ()));

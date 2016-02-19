@@ -92,10 +92,22 @@ TrafficParameters::~TrafficParameters (void)
 {
 }
 
+void
+TrafficParameters::SetNumOfFwdFtpFlows (uint32_t nFwdFtpFlows)
+{
+  m_nFwdFtpFlows = nFwdFtpFlows;
+}
+
 uint32_t
 TrafficParameters::GetNumOfFwdFtpFlows (void) const
 {
   return m_nFwdFtpFlows;
+}
+
+void
+TrafficParameters::SetNumOfRevFtpFlows (uint32_t nRevFtpFlows)
+{
+  m_nRevFtpFlows = nRevFtpFlows;
 }
 
 uint32_t
@@ -104,10 +116,22 @@ TrafficParameters::GetNumOfRevFtpFlows (void) const
   return m_nRevFtpFlows;
 }
 
+void
+TrafficParameters::SetNumOfCrossFtpFlows (uint32_t nCrossFtpFlows)
+{
+  m_nCrossFtpFlows = nCrossFtpFlows;
+}
+
 uint32_t
 TrafficParameters::GetNumOfCrossFtpFlows (void) const
 {
   return m_nCrossFtpFlows;
+}
+
+void
+TrafficParameters::SetNumOfVoiceFlows (uint32_t nVoiceFlows)
+{
+  m_nVoiceFlows = nVoiceFlows;
 }
 
 uint32_t
@@ -116,10 +140,22 @@ TrafficParameters::GetNumOfVoiceFlows (void) const
   return m_nVoiceFlows;
 }
 
+void
+TrafficParameters::SetNumOfFwdStreamingFlows (uint32_t nFwdStreamingFlows)
+{
+  m_nFwdStreamingFlows = nFwdStreamingFlows;
+}
+
 uint32_t
 TrafficParameters::GetNumOfFwdStreamingFlows (void) const
 {
   return m_nFwdStreamingFlows;
+}
+
+void
+TrafficParameters::SetNumOfRevStreamingFlows (uint32_t nRevStreamingFlows)
+{
+  m_nRevStreamingFlows = nRevStreamingFlows;
 }
 
 uint32_t
@@ -128,16 +164,34 @@ TrafficParameters::GetNumOfRevStreamingFlows (void) const
   return m_nRevStreamingFlows;
 }
 
+void
+TrafficParameters::SetStreamingRate (double streamingRate)
+{
+  m_streamingRate = streamingRate;
+}
+
 double
 TrafficParameters::GetStreamingRate (void) const
 {
   return m_streamingRate;
 }
 
+void
+TrafficParameters::SetStreamingPacketSize (uint32_t streamingPacketSize)
+{
+  m_streamingPacketSize = streamingPacketSize;
+}
+
 uint32_t
 TrafficParameters::GetStreamingPacketSize (void) const
 {
   return m_streamingPacketSize;
+}
+
+void
+TrafficParameters::SetAqmUsed (bool useAqm)
+{
+  m_useAqm = useAqm;
 }
 
 bool
@@ -157,4 +211,5 @@ TrafficParameters::GetSimulationTime (void) const
 {
   return m_simulationTime;
 }
+
 }

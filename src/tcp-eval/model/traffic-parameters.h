@@ -57,11 +57,25 @@ public:
   ~TrafficParameters (void);
 
   /**
+   * \brief Set the number of forward FTP flows
+   *
+   * \param nFwdFtpFlows the number of forward FTP flows
+   */
+  void SetNumOfFwdFtpFlows (uint32_t nFwdFtpFlows);
+
+  /**
    * \brief Get the number of forward FTP flows
    *
    * \return the number of forward FTP flows
    */
   uint32_t GetNumOfFwdFtpFlows (void) const;
+
+  /**
+   * \brief Set the number of reverse FTP flows
+   *
+   * \param nRevFtpFlows the number of reverse FTP flows
+   */
+  void SetNumOfRevFtpFlows (uint32_t nRevFtpFlows);
 
   /**
    * \brief Get the number of reverse FTP flows
@@ -71,11 +85,25 @@ public:
   uint32_t GetNumOfRevFtpFlows (void) const;
 
   /**
+   * \brief Set the number of cross FTP flows
+   *
+   * \param nCrossFtpFlows the number of cross FTP flows
+   */
+  void SetNumOfCrossFtpFlows (uint32_t nCrossFtpFlows);
+
+  /**
     * \brief Get the number of cross FTP flows
     *
     * \return the number of cross FTP flows
     */
   uint32_t GetNumOfCrossFtpFlows (void) const;
+
+  /**
+    * \brief Set the number of voice flows
+    *
+    * \param nVoiceFlows the number of voice flows
+    */
+  void SetNumOfVoiceFlows (uint32_t nVoiceFlows);
 
   /**
     * \brief Get the number of voice flows
@@ -85,11 +113,25 @@ public:
   uint32_t GetNumOfVoiceFlows (void) const;
 
   /**
+   * \brief Set the number of forward streaming flows
+   *
+   * \param nFwdStreamingFlows the number of forward streaming flows
+   */
+  void SetNumOfFwdStreamingFlows (uint32_t nFwdStreamingFlows);
+
+  /**
     * \brief Get the number of forward streaming flows
     *
     * \return the number of forward streaming flows
     */
   uint32_t GetNumOfFwdStreamingFlows (void) const;
+
+  /**
+   * \brief Set the number of reverse streaming flows
+   *
+   * \param nRevStreamingFlows the number of reverse streaming flows
+   */
+  void SetNumOfRevStreamingFlows (uint32_t nRevStreamingFlows);
 
   /**
     * \brief Get the number of reverse streaming flows
@@ -99,6 +141,13 @@ public:
   uint32_t GetNumOfRevStreamingFlows (void) const;
 
   /**
+   * \brief Set the bit rate of streaming flows
+   *
+   * \param streamingRate the bit rate of streaming flows
+   */
+  void SetStreamingRate (double streamingRate);
+
+  /**
     * \brief Get the bit rate of streaming flows
     *
     * \return the bit rate of streaming flows in Kbps
@@ -106,10 +155,25 @@ public:
   double GetStreamingRate (void) const;
 
   /**
+   * \brief Set the packet size of streaming flows
+   *
+   * \param streamingPacketSize the packet size of streaming flows
+   */
+  void SetStreamingPacketSize (uint32_t streamingPacketSize);
+
+  /**
     * \brief Get the packet size of streaming flows
+    *
     * \return the packet size of streaming flows in bytes
     */
   uint32_t GetStreamingPacketSize (void) const;
+
+  /**
+   * \brief Set whether AQM is to be used
+   *
+   * \param useAqm True if AQM is enabled
+   */
+  void SetAqmUsed (bool useAqm);
 
   /**
     * \brief Check whether AQM is to be used

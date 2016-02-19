@@ -64,12 +64,6 @@ DumbbellTopology::~DumbbellTopology (void)
 }
 
 void
-DumbbellTopology::CreateTopology (Ptr<TrafficParameters> traffic, Ptr<CreateGraph> createGraph, std::string fileName)
-{
-  CreateDumbbellTopology (traffic, createGraph, fileName);
-}
-
-void
 DumbbellTopology::CreateDumbbellTopology (Ptr<TrafficParameters> traffic, Ptr<CreateGraph> createGraph, std::string fileName)
 {
   uint32_t nBottlenecks = 1;
@@ -167,7 +161,7 @@ DumbbellTopology::CreateDumbbellTopology (Ptr<TrafficParameters> traffic, Ptr<Cr
 
   // Push the stats of left most router to a file
   Ptr<Node> left = dumbbell.GetLeft ();
-  Ptr<LinkStats> linkstats = CreateObject<LinkStats> (m_bottleneckBandwidth, fileName);
+  Ptr<LinkStats> linkstats = CreateObject<LinkStats> (m_bottleneckBandwidth, m_rttp , fileName);
   linkstats->Install (left, traffic);
 
   Simulator::Run ();

@@ -85,7 +85,7 @@ ConfigureTopology::SetTopologyParameters (Ptr<TrafficParameters> traffic, uint32
   uint32_t minBottleneckBuffer = (2 * 1.0 * (numOfFtpFwd + numOfFtpRev));
   m_bottleneckBufferBdp = 1.0;
 
-  double avgRtt = rttp + ((rttDifference * 1.0 * (numOfFtpFwd - 1)) / 2);
+  double avgRtt = (rttp + ((rttDifference * 1.0 * (numOfFtpFwd - 1)) / 2)) * 1000;
   m_bottleneckBuffer = (m_bottleneckBufferBdp * m_bottleneckBandwidth * avgRtt) / 8.0;
 
   if (m_bottleneckBuffer < minBottleneckBuffer)
@@ -108,10 +108,22 @@ ConfigureTopology::SetRedParameters ()
   Config::SetDefault ("ns3::RedQueue::QueueLimit", UintegerValue (m_bottleneckBuffer));
 }
 
+void
+ConfigureTopology::SetBottleneckBandwidth (double bottleneckBandwidth)
+{
+  m_bottleneckBandwidth = bottleneckBandwidth;
+}
+
 double
 ConfigureTopology::GetBottleneckBandwidth (void) const
 {
   return m_bottleneckBandwidth;
+}
+
+void
+ConfigureTopology::SetBottleneckCount (uint32_t nBottlenecks)
+{
+  m_nBottlenecks = nBottlenecks;
 }
 
 uint32_t

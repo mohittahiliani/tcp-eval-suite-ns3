@@ -67,16 +67,16 @@ ParkingLotTopology::~ParkingLotTopology (void)
 {
 }
 
+void
+ParkingLotTopology::SetCrossLinkDelay (Time crossLinkDelay)
+{
+  m_crossLinkDelay = crossLinkDelay;
+}
+
 Time
 ParkingLotTopology::GetCrossLinkDelay (void) const
 {
   return m_crossLinkDelay;
-}
-
-void
-ParkingLotTopology::CreateTopology (Ptr<TrafficParameters> traffic, Ptr<CreateGraph> createGraph, std::string fileName)
-{
-  CreateParkingLotTopology (traffic, createGraph, fileName);
 }
 
 void
@@ -194,7 +194,7 @@ ParkingLotTopology::CreateParkingLotTopology (Ptr<TrafficParameters> trafficPara
 
   // Push the stats of left most router to a file
   Ptr<Node> left = parkingLot.GetRouter (0);
-  Ptr<LinkStats> linkstats = CreateObject<LinkStats> (m_bottleneckBandwidth, fileName);
+  Ptr<LinkStats> linkstats = CreateObject<LinkStats> (m_bottleneckBandwidth, m_rttp , fileName);
   linkstats->Install (left, trafficParams);
 
   Simulator::Run ();

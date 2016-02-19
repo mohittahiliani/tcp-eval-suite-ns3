@@ -19,7 +19,7 @@
  *          Mohit P. Tahiliani <tahiliani@nitk.edu.in>
  */
 
-// Define an object to configure topology.
+// Define an object to configure topology in tcp-eval.
 
 #ifndef CONFIGURE_TOPOLOGY_H
 #define CONFIGURE_TOPOLOGY_H
@@ -60,18 +60,6 @@ public:
   ~ConfigureTopology (void);
 
   /**
-   * \brief Configures the traffic and graph parameters, and stores the
-   *        results in a given file
-   *
-   * \param traffic Object of TrafficParameters class that contains the 
-   *                information of traffic related parameters.
-   * \param createGraph Object of CreateGraph class that contains the 
-   *                    information of graph related parameters.
-   * \param fileName the name of the file where stats are dumped.
-   */
-  virtual void CreateTopology (Ptr<TrafficParameters> traffic, Ptr<CreateGraph> createGraph, std::string fileName) = 0;
-
-  /**
    * \brief Initializes the topology parameters
    *
    * \param traffic Object of TrafficParameters class that contains traffic information
@@ -80,10 +68,17 @@ public:
   void SetTopologyParameters (Ptr<TrafficParameters> traffic, uint32_t nBottlenecks);
 
   /**
-   * \brief Sets RED queue's parameters. 
+   * \brief Sets RED queue's parameters.
    * This is called when AQM is used in bottleneck links.
    */
   void SetRedParameters ();
+
+  /**
+   * \brief Set the bandwidth of bottleneck links in Mbps
+   *
+   * \param bottleneckBandwidth the bandwidth of bottleneck links
+   */
+  void SetBottleneckBandwidth (double bottleneckBandwidth);
 
   /**
    * \brief Get the bandwidth of bottleneck link
@@ -91,6 +86,13 @@ public:
    * \return the bandwidth of bottleneck link
    */
   double GetBottleneckBandwidth (void) const;
+
+  /**
+   * \brief Set the number of bottleneck links
+   *
+   * \param nBottlenecks the number of bottleneck links
+   */
+  void SetBottleneckCount (uint32_t nBottlenecks);
 
   /**
    * \brief Get the number of bottleneck links
