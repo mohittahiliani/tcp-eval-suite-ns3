@@ -1,6 +1,6 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
- * Copyright (c) 2016 NITK, Surathkal
+ * Copyright (c) 2016 NITK Surathkal
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -205,6 +205,28 @@ public:
    *              on every node in the parking-lot
    */
   void      InstallStack (InternetStackHelper stack);
+
+  /**
+   * \returns NetDevice of i'th router that connects to j'th cross-source node
+   * \param routerIndex router number
+   * \param crossSourceIndex cross-source node number
+   */
+  Ptr<NetDevice> GetRouterCrossSourceNetDevice (uint32_t routerIndex, uint32_t crossSourceIndex) const;
+
+  /**
+   * \returns NetDevice of i'th router that connects to j'th cross-sink node
+   * \param routerIndex router number
+   * \param crossSinkIndex cross-sink node number
+   */
+  Ptr<NetDevice> GetRouterCrossSinkNetDevice (uint32_t routerIndex, uint32_t crossSinkIndex) const;
+
+  /**
+   * \returns an NetDevice of i'th router that connects to j'th router
+   * \param fromRouterIndex i'th router number
+   * \param toRouterIndex j'th router number
+   */
+  Ptr<NetDevice> GetRouterToRouterNetDevice (uint32_t fromRouterIndex, uint32_t toRouterIndex) const;
+
 
   /**
    * \param leftIp Ipv4AddressHelper to assign Ipv4 addresses to the

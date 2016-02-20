@@ -1,6 +1,6 @@
 /* -*- Mode:C++; c-file-style:"gnu"; indent-tabs-mode:nil; -*- */
 /*
- * Copyright (c) 2016 NITK, Surathkal
+ * Copyright (c) 2016 NITK Surathkal
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 as
@@ -128,7 +128,7 @@ PointToPointParkingLotHelper::InstallStack (InternetStackHelper stack)
   stack.Install (m_rightLeaf);
 
   //Install stack on Cross Sources and Cross Sinks
-  for (uint32_t i = 0; i < m_crossSources.size (); ++i)         // m_crossSources.size () == m_crossSinks.size (). So, did loop jamming for sources and sinks
+  for (uint32_t i = 0; i < m_crossSources.size (); ++i)
     {
       NodeContainer crossSourcesAtRouterI = m_crossSources[i];
       stack.Install (crossSourcesAtRouterI);
@@ -297,5 +297,25 @@ uint32_t  PointToPointParkingLotHelper::CrossSourceCount (uint32_t routerIndex) 
 uint32_t  PointToPointParkingLotHelper::CrossSinkCount (uint32_t routerIndex) const
 { // Number of cross sink nodes
   return m_crossSinks[routerIndex].GetN ();
+}
+
+Ptr<NetDevice> PointToPointParkingLotHelper::GetRouterCrossSourceNetDevice (uint32_t routerIndex, uint32_t crossSourceIndex) const
+{
+  return m_routerToCrossSourceDevices[routerIndex].Get (crossSourceIndex);
+}
+
+Ptr<NetDevice> PointToPointParkingLotHelper::GetRouterCrossSinkNetDevice(uint32_t routerIndex, uint32_t crossSinkIndex) const
+{
+  return m_routerToCrossSinkDevices[routerIndex].Get (crossSinkIndex);
+}
+
+Ptr<NetDevice> PointToPointParkingLotHelper::GetRouterToRouterNetDevice (uint32_t fromRouterIndex, uint32_t toRouterIndex) const
+{
+  if (fromRouterIndex < toRouterIndex)
+    {
+      // m_routerDevices contains the information of intermediate node twice because of different interfaces
+      return m_routerDevices.Get (2 * fromRouterIndex);
+    }
+  return m_routerDevices.Get ((2 * fromRouterIndex) - 1);
 }
 }
