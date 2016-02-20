@@ -26,7 +26,7 @@
 
 #include <stdint.h>
 
-#include "ns3/traffic-parameters.h"
+#include "traffic-parameters.h"
 #include "ns3/object.h"
 #include "ns3/network-module.h"
 #include "ns3/internet-module.h"
@@ -34,7 +34,6 @@
 #include "ns3/applications-module.h"
 #include "ns3/point-to-point-layout-module.h"
 #include "ns3/random-variable-stream.h"
-#include "ns3/traffic-parameters.h"
 
 namespace ns3 {
 

@@ -27,8 +27,7 @@
 #include <string>
 
 #include "dumbbell-topology.h"
-#include "ns3/create-graph.h"
-#include "ns3/evalstats.h"
+#include "evalstats.h"
 #include "ns3/log.h"
 #include "ns3/simulator.h"
 #include "ns3/core-module.h"
@@ -37,7 +36,6 @@
 #include "ns3/point-to-point-module.h"
 #include "ns3/applications-module.h"
 #include "ns3/point-to-point-layout-module.h"
-#include "ns3/flow-monitor-helper.h"
 
 namespace ns3 {
 
@@ -64,7 +62,7 @@ DumbbellTopology::~DumbbellTopology (void)
 }
 
 void
-DumbbellTopology::CreateDumbbellTopology (Ptr<TrafficParameters> traffic, Ptr<CreateGraph> createGraph, std::string fileName)
+DumbbellTopology::CreateDumbbellTopology (Ptr<TrafficParameters> traffic, std::string fileName)
 {
   uint32_t nBottlenecks = 1;
 

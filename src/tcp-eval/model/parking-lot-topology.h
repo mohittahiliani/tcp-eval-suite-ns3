@@ -25,11 +25,10 @@
 #define PARKING_LOT_TOPOLOGY_H
 
 #include <stdint.h>
-#include "ns3/configure-topology.h"
-#include "ns3/point-to-point-parking-lot.h"
-#include "ns3/traffic-parameters.h"
-#include "ns3/create-graph.h"
-#include "ns3/create-traffic.h"
+
+#include "configure-topology.h"
+#include "traffic-parameters.h"
+#include "create-traffic.h"
 
 namespace ns3 {
 
@@ -93,11 +92,9 @@ public:
    *
    * \param traffic Object of TrafficParameters class that contains the
    *                information of traffic related parameters.
-   * \param createGraph Object of CreateGraph class that contains the
-   *                    information of graph related parameters.
    * \param fileName the name of the file where stats are dumped.
    */
-  void CreateParkingLotTopology (Ptr<TrafficParameters> traffic, Ptr<CreateGraph> createGraph, std::string fileName);
+  void CreateParkingLotTopology (Ptr<TrafficParameters> traffic, std::string fileName);
 
 private:
   Time     m_crossLinkDelay;      //!< Cross link Delay in seconds

@@ -25,10 +25,10 @@
 #define DUMBBELL_TOPOLOGY_H
 
 #include <stdint.h>
-#include "ns3/configure-topology.h"
-#include "ns3/traffic-parameters.h"
-#include "ns3/create-traffic.h"
-#include "ns3/create-graph.h"
+
+#include "configure-topology.h"
+#include "traffic-parameters.h"
+#include "create-traffic.h"
 
 namespace ns3 {
 
@@ -81,11 +81,9 @@ public:
    *
    * \param traffic Object of TrafficParameters class that contains the
    *                information of traffic related parameters.
-   * \param createGraph Object of CreateGraph class that contains the
-   *                    information of graph related parameters.
    * \param fileName the name of the file where stats are dumped.
    */
-  void CreateDumbbellTopology (Ptr<TrafficParameters> traffic, Ptr<CreateGraph> createGraph, std::string fileName);
+  void CreateDumbbellTopology (Ptr<TrafficParameters> traffic, std::string fileName);
 };
 
 }

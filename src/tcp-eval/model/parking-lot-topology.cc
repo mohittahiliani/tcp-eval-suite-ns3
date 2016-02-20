@@ -27,16 +27,15 @@
 #include <string>
 
 #include "parking-lot-topology.h"
+#include "evalstats.h"
 #include "ns3/log.h"
 #include "ns3/simulator.h"
 #include "ns3/core-module.h"
 #include "ns3/network-module.h"
 #include "ns3/internet-module.h"
 #include "ns3/point-to-point-module.h"
-#include "ns3/netanim-module.h"
 #include "ns3/applications-module.h"
 #include "ns3/point-to-point-layout-module.h"
-#include "ns3/evalstats.h"
 
 namespace ns3 {
 
@@ -80,7 +79,7 @@ ParkingLotTopology::GetCrossLinkDelay (void) const
 }
 
 void
-ParkingLotTopology::CreateParkingLotTopology (Ptr<TrafficParameters> trafficParams, Ptr<CreateGraph> createGraph, std::string fileName)
+ParkingLotTopology::CreateParkingLotTopology (Ptr<TrafficParameters> trafficParams, std::string fileName)
 {
   // Set default parameters for topology
   SetTopologyParameters (trafficParams, BottleneckCount ());

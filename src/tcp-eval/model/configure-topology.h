@@ -25,12 +25,12 @@
 #define CONFIGURE_TOPOLOGY_H
 
 #include <stdint.h>
+
 #include "ns3/object.h"
 #include "ns3/ptr.h"
 #include "ns3/node.h"
 #include "ns3/core-module.h"
 #include "ns3/traffic-parameters.h"
-#include "ns3/create-graph.h"
 
 namespace ns3 {
 
