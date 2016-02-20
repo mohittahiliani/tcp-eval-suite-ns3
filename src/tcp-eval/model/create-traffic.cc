@@ -150,7 +150,7 @@ CreateTraffic::CreateVoiceTraffic (PointToPointDumbbellHelper dumbbell, uint32_t
     {
       OnOffHelper voiceFwd ("ns3::UdpSocketFactory",InetSocketAddress (dumbbell.GetRightIpv4Address (i), port1));
       voiceFwd.SetAttribute ("PacketSize",UintegerValue (172));
-      voiceFwd.SetAttribute ("DataRate", DataRateValue (DataRate ("80kb/s")));
+      voiceFwd.SetAttribute ("DataRate", DataRateValue (DataRate ("64kb/s")));
       voiceFwd.SetAttribute ("OffTime",StringValue ("ns3::ConstantRandomVariable[Constant=1.35]"));
 
       ApplicationContainer sourceAndSinkAppFwd;
@@ -164,7 +164,7 @@ CreateTraffic::CreateVoiceTraffic (PointToPointDumbbellHelper dumbbell, uint32_t
 
       OnOffHelper voiceRev ("ns3::UdpSocketFactory",InetSocketAddress (dumbbell.GetLeftIpv4Address (i), port2));
       voiceRev.SetAttribute ("PacketSize",UintegerValue (172));
-      voiceRev.SetAttribute ("DataRate", DataRateValue (DataRate ("80kb/s")));
+      voiceRev.SetAttribute ("DataRate", DataRateValue (DataRate ("64kb/s")));
       voiceRev.SetAttribute ("OffTime",StringValue ("ns3::ConstantRandomVariable[Constant=1.35]"));
 
       ApplicationContainer sourceAndSinkAppRev;
@@ -320,7 +320,7 @@ CreateTraffic::CreateVoiceTrafficParking (PointToPointParkingLotHelper parkingLo
     {
       OnOffHelper voiceFwd ("ns3::UdpSocketFactory",InetSocketAddress (parkingLot.GetRightIpv4Address (i), port1));
       voiceFwd.SetAttribute ("PacketSize",UintegerValue (172));
-      voiceFwd.SetAttribute ("DataRate", DataRateValue (DataRate ("80kb/s")));
+      voiceFwd.SetAttribute ("DataRate", DataRateValue (DataRate ("64kb/s")));
       voiceFwd.SetAttribute ("OffTime",StringValue ("ns3::ConstantRandomVariable[Constant=1.35]"));
 
       ApplicationContainer sourceAndSinkAppFwd;
@@ -334,7 +334,7 @@ CreateTraffic::CreateVoiceTrafficParking (PointToPointParkingLotHelper parkingLo
 
       OnOffHelper voiceRev ("ns3::UdpSocketFactory",InetSocketAddress (parkingLot.GetLeftIpv4Address (i), port2));
       voiceRev.SetAttribute ("PacketSize",UintegerValue (172));
-      voiceRev.SetAttribute ("DataRate", DataRateValue (DataRate ("80kb/s")));
+      voiceRev.SetAttribute ("DataRate", DataRateValue (DataRate ("64kb/s")));
       voiceRev.SetAttribute ("OffTime",StringValue ("ns3::ConstantRandomVariable[Constant=1.35]"));
       ApplicationContainer sourceAndSinkAppRev;
       sourceAndSinkAppRev.Add (voiceRev.Install (parkingLot.GetRight (i)));

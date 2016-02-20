@@ -27,7 +27,7 @@
 #include <string>
 
 #include "dumbbell-topology.h"
-#include "evalstats.h"
+#include "eval-stats.h"
 #include "ns3/log.h"
 #include "ns3/simulator.h"
 #include "ns3/core-module.h"
@@ -115,9 +115,9 @@ DumbbellTopology::CreateDumbbellTopology (Ptr<TrafficParameters> traffic, std::s
   dumbbell.InstallStack (stack);
 
   // Assign IP Addresses
-  dumbbell.AssignIpv4Addresses (Ipv4AddressHelper ("10.1.1.0", "255.255.255.0"),
-                                Ipv4AddressHelper ("10.2.1.0", "255.255.255.0"),
-                                Ipv4AddressHelper ("10.3.1.0", "255.255.255.0"));
+  dumbbell.AssignIpv4Addresses (Ipv4AddressHelper ("10.1.0.0", "255.255.0.0"),
+                                Ipv4AddressHelper ("10.2.0.0", "255.255.0.0"),
+                                Ipv4AddressHelper ("10.3.0.0", "255.255.0.0"));
 
   // offset helps in iterating over the topology by keeping track of
   // the nodes created for a particular traffic
@@ -162,6 +162,7 @@ DumbbellTopology::CreateDumbbellTopology (Ptr<TrafficParameters> traffic, std::s
   Ptr<LinkStats> linkstats = CreateObject<LinkStats> (m_bottleneckBandwidth, m_rttp , fileName);
   linkstats->Install (left, traffic);
 
+  Simulator::Stop (Time::FromDouble (((traffic->GetSimulationTime ()).ToDouble (Time::S) + 5), Time::S));
   Simulator::Run ();
   Simulator::Destroy ();
 }
