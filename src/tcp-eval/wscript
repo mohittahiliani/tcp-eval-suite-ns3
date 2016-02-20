@@ -13,7 +13,8 @@ def build(bld):
         'model/dumbbell-topology.cc',
         'model/parking-lot-topology.cc',
         'model/traffic-parameters.cc',
-        'model/create-traffic.cc',     
+        'model/create-traffic.cc',
+        'model/eval-stats.cc',    
         ]
 
     headers = bld(features='ns3header')
@@ -24,6 +25,7 @@ def build(bld):
         'model/parking-lot-topology.h',
         'model/traffic-parameters.h',
         'model/create-traffic.h',
+        'model/eval-stats.h',
         ]
 
     # bld.ns3_python_bindings()
