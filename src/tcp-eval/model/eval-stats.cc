@@ -26,12 +26,12 @@
 
 namespace ns3 {
 
-LinkStats::LinkStats (uint32_t bandwidth, Time rttp, std::string fileName)
+EvalStats::EvalStats (uint32_t bandwidth, Time rttp, std::string fileName)
 {
   m_totalUtilization = 0;
   m_totalQueueSize = 0;
   m_totalDroppedPacketRate = 0;
-  m_linkStatsFileName.assign (fileName);
+  m_evalStatsFileName.assign (fileName);
   m_bytesOut = 0;
   m_sumQueueLength = 0;
   m_nthSampleInInterval = 0;
@@ -39,15 +39,15 @@ LinkStats::LinkStats (uint32_t bandwidth, Time rttp, std::string fileName)
   this->m_rttp = rttp;
 }
 
-LinkStats::~LinkStats ()
+EvalStats::~EvalStats ()
 {
   InsertIntoFile ();
-  m_linkStatsFile.close ();
+  m_evalStatsFile.close ();
 }
 
 // Computes link utilization and mean queue size
 void
-LinkStats::ComputeMetrics ()
+EvalStats::ComputeMetrics ()
 {
   m_totalUtilization += (double) m_bytesOut * 8.0 / ( m_bandwidth * 1000 * 1000 );
   m_bytesOut = 0;
@@ -69,15 +69,15 @@ LinkStats::ComputeMetrics ()
 
 // Inserts the values computed in the ComputeMetrics into the file
 void
-LinkStats::InsertIntoFile ()
+EvalStats::InsertIntoFile ()
 {
   uint32_t totalPackets = m_queue->GetTotalReceivedPackets ();
   uint32_t droppedPackets = m_queue->GetTotalDroppedPackets ();
   m_totalDroppedPacketRate = ((droppedPackets == 0) ? 0 : (100.0 * (double) droppedPackets / (double) totalPackets));
 
-  m_linkStatsFile.open (m_linkStatsFileName.c_str (), std::ios::app);
-  m_linkStatsFile << m_bandwidth << std::setw (15) << m_rttp.GetSeconds () << std::setw (15) << m_numFtpFlows;
-  m_linkStatsFile << std::setw (15) << (m_totalUtilization / (m_simulationTime.ToDouble (Time::S)) * 100);
+  m_evalStatsFile.open (m_evalStatsFileName.c_str (), std::ios::app);
+  m_evalStatsFile << m_bandwidth << std::setw (15) << m_rttp.GetSeconds () << std::setw (15) << m_numFtpFlows;
+  m_evalStatsFile << std::setw (15) << (m_totalUtilization / (m_simulationTime.ToDouble (Time::S)) * 100);
 
   UintegerValue queueSize;
   if (m_bottleneckQueue.compare ("RED") == 0)
@@ -88,16 +88,16 @@ LinkStats::InsertIntoFile ()
     {
       m_queue->GetAttribute ("MaxPackets", queueSize);
     }
-  m_linkStatsFile << std::setw (15) << m_totalQueueSize / (m_simulationTime.ToDouble (Time::S));
-  m_linkStatsFile << std::setw (15) << m_totalDroppedPacketRate;
+  m_evalStatsFile << std::setw (15) << m_totalQueueSize / (m_simulationTime.ToDouble (Time::S));
+  m_evalStatsFile << std::setw (15) << m_totalDroppedPacketRate;
 
-  m_linkStatsFile << std::endl;
+  m_evalStatsFile << std::endl;
 }
 
 // Called during the PhyTxBegin event at the netdevice.
 // Gets the size of the packet and stores it in bytesOut variable.
 void
-LinkStats::AggregateOverInterval (Ptr<const Packet> packet)
+EvalStats::AggregateOverInterval (Ptr<const Packet> packet)
 {
   m_bytesOut += packet->GetSize ();
 }
@@ -105,7 +105,7 @@ LinkStats::AggregateOverInterval (Ptr<const Packet> packet)
 // Called during the Enqueue event at the queue.
 // Gets the number of packets in the queue and the number of times it is sampled.
 void
-LinkStats::AggregateQueue (Ptr<const Packet> packet)
+EvalStats::AggregateQueue (Ptr<const Packet> packet)
 {
   m_sumQueueLength += m_queue->GetNPackets ();
   m_nthSampleInInterval++;
@@ -116,7 +116,7 @@ LinkStats::AggregateQueue (Ptr<const Packet> packet)
 // It then connects the trace sources PhyTxBegin and Enqueue to the netdevice and queue respectively
 // and makes callbacks to the methods AggregateOverInterval and AggregateQueue.
 void
-LinkStats::Install (Ptr<Node> node, Ptr<TrafficParameters> traffic)
+EvalStats::Install (Ptr<Node> node, Ptr<TrafficParameters> traffic)
 {
   m_simulationTime = traffic->GetSimulationTime ();
   m_numFtpFlows = traffic->GetNumOfFwdFtpFlows ();
@@ -131,12 +131,12 @@ LinkStats::Install (Ptr<Node> node, Ptr<TrafficParameters> traffic)
   m_netDevice = node->GetDevice (0)->GetObject<PointToPointNetDevice> ();
   m_queue = m_netDevice->GetQueue ();
 
-  m_netDevice->TraceConnectWithoutContext ("PhyTxBegin", MakeCallback (&LinkStats::AggregateOverInterval, this));
-  m_queue->TraceConnectWithoutContext ("Enqueue", MakeCallback (&LinkStats::AggregateQueue, this));
+  m_netDevice->TraceConnectWithoutContext ("PhyTxBegin", MakeCallback (&EvalStats::AggregateOverInterval, this));
+  m_queue->TraceConnectWithoutContext ("Enqueue", MakeCallback (&EvalStats::AggregateQueue, this));
 
   for (uint32_t i = 1; i <= m_simulationTime.ToInteger (Time::S); ++i)
     {
-      Simulator::Schedule (Seconds (i), &LinkStats::ComputeMetrics, this);
+      Simulator::Schedule (Seconds (i), &EvalStats::ComputeMetrics, this);
     }
 }
 }

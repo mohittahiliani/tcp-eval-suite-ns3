@@ -48,7 +48,7 @@ namespace ns3 {
  *  When installed on a node, it computes metrics such as link utilization,
  *  mean queue length and packet drop rate.
  */
-class LinkStats : public Object
+class EvalStats : public Object
 {
 public:
 
@@ -59,12 +59,12 @@ public:
    * \param rttp Round Trip Time used in the current simulation.
    * \param filename The file to which the computed values are stored.
    */
-  LinkStats (uint32_t bandwidth, Time rttp, std::string fileName);
+  EvalStats (uint32_t bandwidth, Time rttp, std::string fileName);
 
   /**
    * \brief Destructor
    */
-  ~LinkStats ();
+  ~EvalStats ();
 
   /**
    * \brief Calculates metrics every second.
@@ -129,8 +129,8 @@ private:
   Time                        m_rttp;			//!< RTT value for the simulation
   Ptr<PointToPointNetDevice>  m_netDevice;		//!< The netdevice from which stats are collected
   Ptr<Queue>                  m_queue;			//!< The queue of the node from which stats are collected
-  std::string                 m_linkStatsFileName;	//!< Name of file where the output is stored
-  std::ofstream               m_linkStatsFile;		//!< The file for storing the output
+  std::string                 m_evalStatsFileName;	//!< Name of file where the output is stored
+  std::ofstream               m_evalStatsFile;		//!< The file for storing the output
 };
 
 }
