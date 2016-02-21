@@ -139,11 +139,11 @@ ParkingLotTopology::CreateParkingLotTopology (Ptr<TrafficParameters> trafficPara
   parkingLot.InstallStack (stack);
 
   // Assign IP Addresses
-  parkingLot.AssignIpv4Addresses (Ipv4AddressHelper ("10.1.0.0", "255.255.0.0"),
-                                  Ipv4AddressHelper ("10.2.0.0", "255.255.0.0"),
-                                  Ipv4AddressHelper ("10.3.0.0", "255.255.0.0"),
-                                  Ipv4AddressHelper ("10.4.0.0", "255.255.0.0"),
-                                  Ipv4AddressHelper ("10.5.0.0", "255.255.0.0"));
+  parkingLot.AssignIpv4Addresses (Ipv4AddressHelper ("10.1.1.0", "255.255.255.0"),
+                                  Ipv4AddressHelper ("10.10.1.0", "255.255.255.0"),
+                                  Ipv4AddressHelper ("10.50.1.0", "255.255.255.0"),
+                                  Ipv4AddressHelper ("10.100.1.0", "255.255.255.0"),
+                                  Ipv4AddressHelper ("10.150.1.0", "255.255.255.0"));
 
   // offset helps in iterating over the topology by keeping track of
   // the nodes created for a particular traffic
