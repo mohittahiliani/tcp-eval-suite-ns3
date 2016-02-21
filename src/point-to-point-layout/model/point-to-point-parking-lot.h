@@ -127,18 +127,6 @@ public:
   Ipv4Address GetRightIpv4Address (uint32_t i) const;
 
   /**
-   * \returns an Ipv6Address of the i'th left leaf
-   * \param i node number
-   */
-  Ipv6Address GetLeftIpv6Address (uint32_t i ) const; // Get left leaf address
-
-  /**
-   * \returns an Ipv6Address of the i'th right leaf
-   * \param i node number
-   */
-  Ipv6Address GetRightIpv6Address (uint32_t i) const; // Get right leaf address
-
-  /**
    * \returns an Ipv4Address of the j'th cross-source node attached to the i'th router
    * \param routerIndex router number
    * \param crossSourceIndex cross-source node number
@@ -250,13 +238,6 @@ public:
                                  Ipv4AddressHelper crossSourceIp,
                                  Ipv4AddressHelper crossSinkIp);
 
-  /**
-   * \param network an IPv6 address representing the network portion
-   *                of the IPv6 Address
-   * \param prefix the prefix length
-   */
-  void      AssignIpv6Addresses (Ipv6Address network, Ipv6Prefix prefix);
-
 private:
   NodeContainer          m_leftLeaf;                                    //!< Left Leaf nodes
   NetDeviceContainer     m_leftLeafDevices;                             //!< Left Leaf NetDevices
@@ -271,11 +252,6 @@ private:
   Ipv4InterfaceContainer m_rightLeafInterfaces;                         //!< Right Leaf interfaces (IPv4)
   Ipv4InterfaceContainer m_rightRouterInterfaces;                       //!< Right router interfaces (IPv4)
   Ipv4InterfaceContainer m_routerInterfaces;                            //!< Router interfaces (IPv4)
-  Ipv6InterfaceContainer m_leftLeafInterfaces6;                         //!< Left Leaf interfaces (IPv6)
-  Ipv6InterfaceContainer m_leftRouterInterfaces6;                       //!< Left router interfaces (IPv6)
-  Ipv6InterfaceContainer m_rightLeafInterfaces6;                        //!< Right Leaf interfaces (IPv6)
-  Ipv6InterfaceContainer m_rightRouterInterfaces6;                      //!< Right router interfaces (IPv6)
-  Ipv6InterfaceContainer m_routerInterfaces6;                           //!< Router interfaces (IPv6)
   std::vector<NodeContainer> m_crossSources;                            //!< Cross-source nodes
   std::vector<NetDeviceContainer>     m_crossSourceDevices;             //!< Cross-source NetDevices
   std::vector<NodeContainer>          m_crossSinks;                     //!< Cross-sink nodes
@@ -286,10 +262,6 @@ private:
   std::vector<Ipv4InterfaceContainer> m_routerToCrossSinkInterfaces;    //!< Router cross-sink interfaces (IPv4)
   std::vector<Ipv4InterfaceContainer> m_crossSourceInterfaces;          //!< Cross-source interfaces (IPv4)
   std::vector<Ipv4InterfaceContainer> m_crossSinkInterfaces;            //!< Cross-sink interfaces (IPv4)
-  std::vector<Ipv6InterfaceContainer> m_routerToCrossSourceInterfaces6; //!< Router cross-source interfaces (IPv6)
-  std::vector<Ipv6InterfaceContainer> m_routerToCrossSinkInterfaces6;   //!< Router cross-sink interfaces (IPv6)
-  std::vector<Ipv6InterfaceContainer> m_crossSourceInterfaces6;         //!< Cross-source interfaces (IPv6)
-  std::vector<Ipv6InterfaceContainer> m_crossSinkInterfaces6;           //!< Cross-sink interfaces (IPv6)
 };
 }
 #endif /* POINT_TO_POINT_PARKING_LOT_HELPER_H */
