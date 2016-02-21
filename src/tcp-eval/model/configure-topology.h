@@ -171,13 +171,6 @@ public:
    */
   uint32_t GetNonBottleneckBuffer (void) const;
 
-  /**
-   * \brief Checks whether Tmix is enabled
-   *
-   * \return true if Tmix is enabled
-   */
-  bool IsTmixEnabled (void) const;
-
 protected:
   double   m_bottleneckBandwidth;       //!< Bandwidth of bottleneck link in Mbps
   uint32_t m_nBottlenecks;              //!< Number of bottleneck links.
@@ -189,7 +182,6 @@ protected:
   double   m_nonBottleneckBandwidth;    //!< Bandwidth of non-bottleneck link in Mbps
   Time     m_nonBottleneckDelay;        //!< Delay of non-bottleneck link in seconds
   uint32_t m_nonBottleneckBuffer;       //!< Size of the non-bottleneck buffer
-  bool     m_tmixEnabled;               //!< If true, generate the traffic using Tmix
   double   m_bottleneckBufferBdp;       //!< Bandwidth-Delay Product for the bottleneck link
 };
 }

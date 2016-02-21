@@ -192,10 +192,4 @@ ConfigureTopology::GetNonBottleneckBuffer (void) const
   return m_nonBottleneckBuffer;
 }
 
-bool
-ConfigureTopology::IsTmixEnabled (void) const
-{
-  return m_tmixEnabled;
-}
-
 }
