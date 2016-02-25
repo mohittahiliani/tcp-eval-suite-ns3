@@ -33,6 +33,8 @@
 #include "ns3/point-to-point-net-device.h"
 #include "ns3/internet-stack-helper.h"
 #include "ns3/string.h"
+#include "ns3/vector.h"
+#include "ns3/ipv6-address-generator.h"
 
 namespace ns3 {
 
@@ -209,6 +211,101 @@ PointToPointParkingLotHelper::AssignIpv4Addresses (Ipv4AddressHelper leftIp,
     }
 }
 
+void
+PointToPointParkingLotHelper::AssignIpv6Addresses (Ipv6Address addrBase, Ipv6Prefix prefix)
+{
+  Ipv6AddressGenerator::Init (addrBase, prefix);
+  Ipv6Address v6network;
+  Ipv6AddressHelper addressHelper;
+
+  // Assign to left side
+  for (uint32_t i = 0; i < LeftCount (); ++i)
+    {
+      v6network = Ipv6AddressGenerator::GetNetwork (prefix);
+      addressHelper.SetBase (v6network, prefix);
+
+      NetDeviceContainer ndc;
+      ndc.Add (m_leftLeafDevices.Get (i));
+      ndc.Add (m_leftRouterDevices.Get (i));
+      Ipv6InterfaceContainer ifc = addressHelper.Assign (ndc);
+      Ipv6InterfaceContainer::Iterator it = ifc.Begin ();
+      m_leftLeafInterfaces6.Add ((*it).first, (*it).second);
+      it++;
+      m_leftRouterInterfaces6.Add ((*it).first, (*it).second);
+      Ipv6AddressGenerator::NextNetwork (prefix);
+    }
+
+  // Assign to right side
+  for (uint32_t i = 0; i < RightCount (); ++i)
+    {
+      v6network = Ipv6AddressGenerator::GetNetwork (prefix);
+      addressHelper.SetBase (v6network, prefix);
+
+      NetDeviceContainer ndc;
+      ndc.Add (m_rightLeafDevices.Get (i));
+      ndc.Add (m_rightRouterDevices.Get (i));
+      Ipv6InterfaceContainer ifc = addressHelper.Assign (ndc);
+      Ipv6InterfaceContainer::Iterator it = ifc.Begin ();
+      m_rightLeafInterfaces6.Add ((*it).first, (*it).second);
+      it++;
+      m_rightRouterInterfaces6.Add ((*it).first, (*it).second);
+      Ipv6AddressGenerator::NextNetwork (prefix);
+    }
+
+  // Assign to router network
+  for (uint32_t i = 0; i < m_routerDevices.GetN (); i += 2)
+    {
+      v6network = Ipv6AddressGenerator::GetNetwork (prefix);
+      addressHelper.SetBase (v6network, prefix);
+
+      NetDeviceContainer ndc;
+      ndc.Add (m_routerDevices.Get (i));
+      ndc.Add (m_routerDevices.Get (i + 1));
+      Ipv6InterfaceContainer ifc = addressHelper.Assign (ndc);
+      Ipv6InterfaceContainer::Iterator it = ifc.Begin ();
+      m_routerInterfaces6.Add ((*it).first, (*it).second);
+      it++;
+      m_routerInterfaces6.Add ((*it).first, (*it).second);
+      Ipv6AddressGenerator::NextNetwork (prefix);
+    }
+
+  // Assign to cross sources and sinks
+  for (uint32_t i = 0; i < RouterCount () - 1; ++i)
+    {
+      uint32_t crossSourcesAtRouterI = m_crossSourceDevices[i].GetN ();
+      Ipv6InterfaceContainer routerToCrossSourceInterfaces6, crossSourceInterfaces6, routerToCrossSinkInterfaces6, crossSinkInterfaces6;
+      for (uint32_t j = 0; j < crossSourcesAtRouterI; ++j)
+        {
+          v6network = Ipv6AddressGenerator::GetNetwork (prefix);
+          addressHelper.SetBase (v6network, prefix);
+
+          NetDeviceContainer ndc;
+          ndc.Add (m_routerToCrossSourceDevices[i].Get (j));
+          ndc.Add (m_crossSourceDevices[i].Get (j));
+          Ipv6InterfaceContainer ifc = addressHelper.Assign (ndc);
+          Ipv6InterfaceContainer::Iterator it = ifc.Begin ();
+          routerToCrossSourceInterfaces6.Add ((*it).first, (*it).second);
+          it++;
+          crossSourceInterfaces6.Add ((*it).first, (*it).second);
+          Ipv6AddressGenerator::NextNetwork (prefix);
+
+          NetDeviceContainer ndc2;
+          ndc2.Add (m_routerToCrossSinkDevices[i].Get (j));
+          ndc2.Add (m_crossSinkDevices[i].Get (j));
+          Ipv6InterfaceContainer ifc2 = addressHelper.Assign (ndc2);
+          Ipv6InterfaceContainer::Iterator it2 = ifc2.Begin ();
+          routerToCrossSinkInterfaces6.Add ((*it2).first, (*it2).second);
+          it2++;
+          crossSinkInterfaces6.Add ((*it2).first, (*it2).second);
+          Ipv6AddressGenerator::NextNetwork (prefix);
+        }
+      m_routerToCrossSourceInterfaces6.push_back (routerToCrossSourceInterfaces6);
+      m_crossSourceInterfaces6.push_back (crossSourceInterfaces6);
+      m_routerToCrossSinkInterfaces6.push_back (routerToCrossSinkInterfaces6);
+      m_crossSinkInterfaces6.push_back (crossSinkInterfaces6);
+    }
+}
+
 Ptr<Node> PointToPointParkingLotHelper::GetLeft (uint32_t i) const
 { // Get the i'th left side leaf
   return m_leftLeaf.Get (i);
@@ -272,6 +369,46 @@ Ipv4Address PointToPointParkingLotHelper::GetRouterToRouterIpv4Address (uint32_t
       return m_routerInterfaces.GetAddress (2 * fromRouterIndex);
     }
   return m_routerInterfaces.GetAddress ((2 * fromRouterIndex) - 1);
+}
+
+Ipv6Address PointToPointParkingLotHelper::GetLeftIpv6Address (uint32_t i) const
+{
+  return m_leftLeafInterfaces6.GetAddress (i, 1);
+}
+
+Ipv6Address PointToPointParkingLotHelper::GetRightIpv6Address (uint32_t i) const
+{
+  return m_rightLeafInterfaces6.GetAddress (i, 1);
+}
+
+Ipv6Address PointToPointParkingLotHelper::GetCrossSourceIpv6Address (uint32_t routerIndex, uint32_t crossSourceIndex) const
+{
+  return m_crossSourceInterfaces6[routerIndex].GetAddress (crossSourceIndex, 1);
+}
+
+Ipv6Address PointToPointParkingLotHelper::GetCrossSinkIpv6Address (uint32_t routerIndex, uint32_t crossSinkIndex) const
+{
+  return m_crossSinkInterfaces6[routerIndex].GetAddress (crossSinkIndex, 1);
+}
+
+Ipv6Address PointToPointParkingLotHelper::GetRouterCrossSourceIpv6Address (uint32_t routerIndex, uint32_t crossSourceIndex) const
+{
+  return m_routerToCrossSourceInterfaces6[routerIndex].GetAddress (crossSourceIndex, 1);
+}
+
+Ipv6Address PointToPointParkingLotHelper::GetRouterCrossSinkIpv6Address (uint32_t routerIndex, uint32_t crossSinkIndex) const
+{
+  return m_routerToCrossSinkInterfaces6[routerIndex].GetAddress (crossSinkIndex, 1);
+}
+
+Ipv6Address PointToPointParkingLotHelper::GetRouterToRouterIpv6Address (uint32_t fromRouterIndex, uint32_t toRouterIndex) const
+{
+  if (fromRouterIndex < toRouterIndex)
+    {
+      // m_routerInterfaces contains the information of intermediate node twice because of different interfaces
+      return m_routerInterfaces6.GetAddress ((2 * fromRouterIndex), 1);
+    }
+  return m_routerInterfaces6.GetAddress (((2 * fromRouterIndex) - 1), 1);
 }
 
 uint32_t  PointToPointParkingLotHelper::LeftCount () const
