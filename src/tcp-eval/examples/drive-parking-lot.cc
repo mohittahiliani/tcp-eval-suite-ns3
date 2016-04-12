@@ -19,7 +19,7 @@
  *          Mohit P. Tahiliani <tahiliani@nitk.edu.in>
  */
 
-// This example is a part of TCL evaluation suite and 
+// This example is a part of TCL evaluation suite and
 // creates a parking-lot scenario.
 
 #include "ns3/core-module.h"
@@ -40,6 +40,7 @@ main (int argc, char *argv[])
   double        rttDiff = 0.0;
   Time          rttp;
   Time          rttDifference;
+  uint32_t      nBottleneck = 3;
 
   // Set default values for traffic
   uint32_t      nFwdFtpFlows = 5;
@@ -65,6 +66,7 @@ main (int argc, char *argv[])
   // Allow the user to change values by command line arguments
   CommandLine cmd;
   cmd.AddValue ("bottleneckBandwidth", "Bandwidth of bottleneck link in Mbps", bottleneckBandwidth);
+  cmd.AddValue ("nBottleneck", "Number of bottleneck links", nBottleneck);
   cmd.AddValue ("rttp", "Round trip propagation delay in seconds", rtt);
   cmd.AddValue ("rttDifference", "Flow RTT difference in seconds", rttDiff);
   cmd.AddValue ("nFwdFtpFlows", "Number of FTP flows on forward path", nFwdFtpFlows);
@@ -90,6 +92,7 @@ main (int argc, char *argv[])
 
   // Set topology parameters
   Config::SetDefault ("ns3::ConfigureTopology::BottleneckBandwidth", DoubleValue (bottleneckBandwidth));
+  Config::SetDefault ("ns3::ConfigureTopology::BottleneckCount", UintegerValue (nBottleneck));
   Config::SetDefault ("ns3::ConfigureTopology::RTTP", TimeValue (rttp));
   Config::SetDefault ("ns3::ConfigureTopology::RttDiff", TimeValue (rttDifference));
 
@@ -107,15 +110,7 @@ main (int argc, char *argv[])
   Config::SetDefault ("ns3::ParkingLotTopology::CrossLinkDelay", TimeValue (crossLinkDelay));
 
   // Set TCP variant
-  if (tcp_variant.compare ("TcpTahoe") == 0)
-    {
-      Config::SetDefault ("ns3::TcpL4Protocol::SocketType", TypeIdValue (TcpTahoe::GetTypeId ()));
-    }
-  else if (tcp_variant.compare ("TcpReno") == 0)
-    {
-      Config::SetDefault ("ns3::TcpL4Protocol::SocketType", TypeIdValue (TcpReno::GetTypeId ()));
-    }
-  else if (tcp_variant.compare ("TcpNewReno") == 0)
+  if (tcp_variant.compare ("TcpNewReno") == 0)
     {
       Config::SetDefault ("ns3::TcpL4Protocol::SocketType", TypeIdValue (TcpNewReno::GetTypeId ()));
     }

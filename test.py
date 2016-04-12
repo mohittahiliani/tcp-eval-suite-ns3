@@ -54,7 +54,7 @@ interesting_config_items = [
     "ENABLE_TESTS",
     "EXAMPLE_DIRECTORIES",
     "ENABLE_PYTHON_BINDINGS",
-    "ENABLE_CLICK",
+    "NSCLICK",
     "ENABLE_BRITE",
     "ENABLE_OPENFLOW",
     "APPNAME",
@@ -69,7 +69,7 @@ ENABLE_REAL_TIME = False
 ENABLE_THREADING = False
 ENABLE_EXAMPLES = True
 ENABLE_TESTS = True
-ENABLE_CLICK = False
+NSCLICK = False
 ENABLE_BRITE = False
 ENABLE_OPENFLOW = False
 EXAMPLE_DIRECTORIES = []
@@ -767,6 +767,18 @@ def run_job_synchronously(shell_command, directory, valgrind, is_python, build_p
     elapsed_time = time.time() - start_time
 
     retval = proc.returncode
+    try:
+        stdout_results = stdout_results.decode()
+    except UnicodeDecodeError:
+        print("Non-decodable character in stdout output of %s" % cmd)
+        print(stdout_results)
+        retval = 1
+    try:
+        stderr_results = stderr_results.decode()
+    except UnicodeDecodeError:
+        print("Non-decodable character in stderr output of %s" % cmd)
+        print(stderr_results)
+        retval = 1
 
     #
     # valgrind sometimes has its own idea about what kind of memory management
@@ -1324,6 +1336,8 @@ def run_tests():
         else:
             proc = subprocess.Popen("sysctl -n hw.ncpu", shell = True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             stdout_results, stderr_results = proc.communicate()
+            stdout_results = stdout_results.decode()
+            stderr_results = stderr_results.decode()
             if len(stderr_results) == 0:
                 processors = int(stdout_results)
 

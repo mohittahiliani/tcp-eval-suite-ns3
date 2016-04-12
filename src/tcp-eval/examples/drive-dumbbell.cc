@@ -19,7 +19,7 @@
  *          Mohit P. Tahiliani <tahiliani@nitk.edu.in>
  */
 
-// This example is a part of TCL evaluation suite and 
+// This example is a part of TCL evaluation suite and
 // creates a dumbbell scenario.
 
 #include "ns3/core-module.h"
@@ -99,15 +99,7 @@ main (int argc, char *argv[])
   Config::SetDefault ("ns3::TrafficParameters::SimulationTime", TimeValue (simulationTime));
 
   // Set TCP variant
-  if (tcp_variant.compare ("TcpTahoe") == 0)
-    {
-      Config::SetDefault ("ns3::TcpL4Protocol::SocketType", TypeIdValue (TcpTahoe::GetTypeId ()));
-    }
-  else if (tcp_variant.compare ("TcpReno") == 0)
-    {
-      Config::SetDefault ("ns3::TcpL4Protocol::SocketType", TypeIdValue (TcpReno::GetTypeId ()));
-    }
-  else if (tcp_variant.compare ("TcpNewReno") == 0)
+  if (tcp_variant.compare ("TcpNewReno") == 0)
     {
       Config::SetDefault ("ns3::TcpL4Protocol::SocketType", TypeIdValue (TcpNewReno::GetTypeId ()));
     }

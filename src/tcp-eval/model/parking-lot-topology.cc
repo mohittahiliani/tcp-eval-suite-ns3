@@ -27,6 +27,7 @@
 #include <string>
 
 #include "parking-lot-topology.h"
+
 #include "eval-stats.h"
 #include "ns3/log.h"
 #include "ns3/simulator.h"
@@ -193,7 +194,7 @@ ParkingLotTopology::CreateParkingLotTopology (Ptr<TrafficParameters> trafficPara
 
   // Push the stats of left most router to a file
   Ptr<Node> left = parkingLot.GetRouter (0);
-  Ptr<EvalStats> evalStats = CreateObject<EvalStats> (m_bottleneckBandwidth, m_rttp , fileName);
+  Ptr<EvalStats> evalStats = CreateObject<EvalStats> (m_bottleneckBandwidth, m_rttp, fileName);
   evalStats->Install (left, trafficParams);
 
   Simulator::Stop (Time::FromDouble (((trafficParams->GetSimulationTime ()).ToDouble (Time::S) + 5), Time::S));

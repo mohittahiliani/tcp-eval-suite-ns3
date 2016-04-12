@@ -30,6 +30,8 @@ cpp_examples = [
     ("ofdm-ht-validation", "True", "True"),
     ("ofdm-validation", "True", "True"),
     ("ofdm-vht-validation", "True", "True"),
+    ("mixed-bg-network", "True", "True"),
+    ("wifi-tcp", "True", "True"),
 ]
 
 # A list of Python examples to run in order to ensure that they remain

@@ -57,7 +57,7 @@ done
 # params are changing variable, scope and output file.
 run_a_session ( ) {
 
-    for tcp_var in TcpTahoe TcpReno TcpNewReno TcpWestwood TcpWestwoodPlus
+    for tcp_var in TcpNewReno TcpWestwood TcpWestwoodPlus
         do
             for var in $1  
                 do
@@ -109,7 +109,8 @@ function output_tex () {
 }
 
 # run a series of dumbbell simulations
-run_a_session "1 3 5 7 10 15 20 30 60 100"
+run_a_session "1 3 5"
+#1 3 5 7 10 15 20 30 60 100
 
 # all work done in Working_DIR
 cd $Working_DIR

@@ -278,7 +278,7 @@ Ns3TcpStateTestCase::DoRun (void)
   Config::SetDefault ("ns3::TcpL4Protocol::SocketType", StringValue (tcpModel));
   Config::SetDefault ("ns3::TcpSocket::SegmentSize", UintegerValue (1000));
   Config::SetDefault ("ns3::TcpSocket::DelAckCount", UintegerValue (1));
-  Config::SetDefault ("ns3::DropTailQueue::MaxPackets", UintegerValue (20));
+  Config::SetDefault ("ns3::Queue::MaxPackets", UintegerValue (20));
   Config::SetDefault ("ns3::TcpSocketBase::Timestamp", BooleanValue (false));
 
   if (m_writeLogging)
@@ -286,9 +286,7 @@ Ns3TcpStateTestCase::DoRun (void)
       LogComponentEnableAll (LOG_PREFIX_FUNC);
       LogComponentEnable ("ErrorModel", LOG_LEVEL_DEBUG);
       LogComponentEnable ("Ns3TcpStateTest", LOG_LEVEL_DEBUG);
-      LogComponentEnable ("TcpNewReno", LOG_LEVEL_INFO);
-      LogComponentEnable ("TcpReno", LOG_LEVEL_INFO);
-      LogComponentEnable ("TcpTahoe", LOG_LEVEL_INFO);
+      LogComponentEnable ("TcpCongestionOps", LOG_LEVEL_INFO);
       LogComponentEnable ("TcpSocketBase", LOG_LEVEL_INFO);
     }
 

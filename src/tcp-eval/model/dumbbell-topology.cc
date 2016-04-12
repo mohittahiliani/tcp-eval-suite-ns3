@@ -27,6 +27,7 @@
 #include <string>
 
 #include "dumbbell-topology.h"
+
 #include "eval-stats.h"
 #include "ns3/log.h"
 #include "ns3/simulator.h"
@@ -36,6 +37,7 @@
 #include "ns3/point-to-point-module.h"
 #include "ns3/applications-module.h"
 #include "ns3/point-to-point-layout-module.h"
+#include "ns3/traffic-control-module.h"
 
 namespace ns3 {
 
@@ -79,23 +81,6 @@ DumbbellTopology::CreateDumbbellTopology (Ptr<TrafficParameters> traffic, std::s
                              "Mode", StringValue ("QUEUE_MODE_PACKETS"),
                              "MaxPackets", UintegerValue (m_nonBottleneckBuffer));
 
-  // If AQM is used, install RED queue at the bottleneck link
-  // else install DropTail queue
-  if (traffic->IsAqmUsed () == true)
-    {
-      SetRedParameters ();
-      pointToPointRouter.SetQueue ("ns3::RedQueue",
-                                   "LinkBandwidth", DataRateValue (DataRate (to_string<double> (m_bottleneckBandwidth) + std::string ("Mbps"))),
-                                   "LinkDelay", TimeValue (m_bottleneckDelay),
-                                   "QueueLimit", UintegerValue (m_bottleneckBuffer));
-    }
-  else
-    {
-      pointToPointRouter.SetQueue ("ns3::DropTailQueue",
-                                   "Mode", StringValue ("QUEUE_MODE_PACKETS"),
-                                   "MaxPackets", UintegerValue (m_bottleneckBuffer));
-    }
-
   uint32_t nFwdFtpFlow = traffic->GetNumOfFwdFtpFlows ();
   uint32_t nRevFtpFlow = traffic->GetNumOfRevFtpFlows ();
   uint32_t nVoiceFlow = traffic->GetNumOfVoiceFlows ();
@@ -113,6 +98,20 @@ DumbbellTopology::CreateDumbbellTopology (Ptr<TrafficParameters> traffic, std::s
   // Install Stack
   InternetStackHelper stack;
   dumbbell.InstallStack (stack);
+
+  Config::SetDefault ("ns3::Queue::Mode", StringValue ("QUEUE_MODE_PACKETS"));
+  Config::SetDefault ("ns3::Queue::MaxPackets", UintegerValue (m_bottleneckBuffer));
+
+  if (traffic->IsAqmUsed () == true)
+    {
+      SetRedParameters ();
+      TrafficControlHelper tchBottleneck;
+      tchBottleneck.SetRootQueueDisc ("ns3::RedQueueDisc",
+                                      "LinkBandwidth", StringValue (to_string<double> (m_bottleneckBandwidth) + std::string ("Mbps")),
+                                      "LinkDelay", StringValue (to_string<double> (m_bottleneckDelay.ToDouble (Time::S)) + std::string ("s")));
+      tchBottleneck.Install (dumbbell.GetLeft ()->GetDevice (0));
+      tchBottleneck.Install (dumbbell.GetRight ()->GetDevice (0));
+    }
 
   // Assign IP Addresses
   dumbbell.AssignIpv4Addresses (Ipv4AddressHelper ("10.1.1.0", "255.255.255.0"),
@@ -159,7 +158,7 @@ DumbbellTopology::CreateDumbbellTopology (Ptr<TrafficParameters> traffic, std::s
 
   // Push the stats of left most router to a file
   Ptr<Node> left = dumbbell.GetLeft ();
-  Ptr<EvalStats> evalStats = CreateObject<EvalStats> (m_bottleneckBandwidth, m_rttp , fileName);
+  Ptr<EvalStats> evalStats = CreateObject<EvalStats> (m_bottleneckBandwidth, m_rttp, fileName);
   evalStats->Install (left, traffic);
 
   Simulator::Stop (Time::FromDouble (((traffic->GetSimulationTime ()).ToDouble (Time::S) + 5), Time::S));

@@ -21,13 +21,15 @@ def build(bld):
                                   'flow-monitor', 'internet', 'lr-wpan',
                                   'lte', 'mesh', 'mobility', 'olsr',
                                   'point-to-point', 'sixlowpan', 'stats',
-                                  'uan', 'wifi'])
+                                  'uan', 'wifi', 'internet-apps',
+                                  'point-to-point-layout', 'traffic-control'])
 
     headers = bld(features='ns3header')
     headers.module = 'test'
 
     test_test = bld.create_ns3_module_test_library('test')
     test_test.source = [
+        'adaptive-red-queue-disc-test-suite.cc',
         'csma-system-test-suite.cc',
         'ns3tcp/ns3tcp-cwnd-test-suite.cc',
         'ns3tcp/ns3tcp-interop-test-suite.cc',

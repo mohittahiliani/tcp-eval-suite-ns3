@@ -39,6 +39,7 @@
 #include "ns3/point-to-point-module.h"
 #include "ns3/point-to-point-layout-module.h"
 #include "ns3/applications-module.h"
+#include "ns3/traffic-control-module.h"
 
 namespace ns3 {
 
@@ -51,7 +52,6 @@ namespace ns3 {
 class EvalStats : public Object
 {
 public:
-
   /**
    * \brief Constructor
    *
@@ -59,7 +59,7 @@ public:
    * \param rttp Round Trip Time used in the current simulation.
    * \param filename The file to which the computed values are stored.
    */
-  EvalStats (uint32_t bandwidth, Time rttp, std::string fileName);
+  EvalStats (double bandwidth, Time rttp, std::string fileName);
 
   /**
    * \brief Destructor
@@ -83,6 +83,7 @@ public:
    * \param packet Packet whose size is to be obtained
    */
   void AggregateOverInterval (Ptr<const Packet> packet);
+//  void AggregateOverInterval (Ptr<const QueueItem> queueItem);
 
   /**
    * \brief Computes the size of the queue
@@ -94,6 +95,7 @@ public:
    *
    */
   void AggregateQueue (Ptr<const Packet> packet);
+//  void AggregateQueue (Ptr<const QueueItem> queueItem);
 
   /**
    * \brief Writes the metrics into a file.
@@ -113,24 +115,24 @@ public:
     * \param traffic To obtain simulation time.
     *
     */
-  void Install (Ptr<Node> node, Ptr<TrafficParameters> traffic);
+  void Install (Ptr<Node> node, Ptr<TrafficParameters> traffic);//, QueueDiscContainer queueDiscs);
 
 private:
-  uint32_t                    m_bytesOut;		//!< Number of bytes sent per second
-  uint32_t                    m_bandwidth;		//!< Bandwidth of bottleneck link in Mbps
-  uint32_t                    m_sumQueueLength;		//!< Sum of sampled queue lengths
-  uint32_t                    m_nthSampleInInterval;	//!< Number of samples for queue lengths
-  uint32_t                    m_numFtpFlows;		//!< Number of forward FTP Flows
-  double                      m_totalUtilization;	//!< Running sum of all utilization values
-  double                      m_totalQueueSize;		//!< Running sum of queue size
+  uint32_t                    m_bytesOut;               //!< Number of bytes sent per second
+  double                      m_bandwidth;              //!< Bandwidth of bottleneck link in Mbps
+  uint32_t                    m_sumQueueLength;         //!< Sum of sampled queue lengths
+  uint32_t                    m_nthSampleInInterval;    //!< Number of samples for queue lengths
+  uint32_t                    m_numFtpFlows;            //!< Number of forward FTP Flows
+  double                      m_totalUtilization;       //!< Running sum of all utilization values
+  double                      m_totalQueueSize;         //!< Running sum of queue size
   double                      m_totalDroppedPacketRate; //!< Running sum of dropped packet rates
-  std::string                 m_bottleneckQueue;	//!< Type of bottleneck Queue
-  Time                        m_simulationTime;		//!< Simulation time in seconds
-  Time                        m_rttp;			//!< RTT value for the simulation
-  Ptr<PointToPointNetDevice>  m_netDevice;		//!< The netdevice from which stats are collected
-  Ptr<Queue>                  m_queue;			//!< The queue of the node from which stats are collected
-  std::string                 m_evalStatsFileName;	//!< Name of file where the output is stored
-  std::ofstream               m_evalStatsFile;		//!< The file for storing the output
+  Time                        m_simulationTime;         //!< Simulation time in seconds
+  Time                        m_rttp;                   //!< RTT value for the simulation
+  Ptr<PointToPointNetDevice>  m_netDeviceP2p;           //!< The netdevice from which stats are collected
+  Ptr<Queue>                  m_queue;                  //!< The queue of the node from which stats are collected
+  Ptr<QueueDisc>              m_queueDisc;                      //!< The queue disc installed at netDevice
+  std::string                 m_evalStatsFileName;      //!< Name of file where the output is stored
+  std::ofstream               m_evalStatsFile;          //!< The file for storing the output
 };
 
 }

@@ -75,6 +75,7 @@ CreateTraffic::CreateFwdFtpTraffic (PointToPointDumbbellHelper dumbbell, uint32_
   // offset is used to identify the starting node among left leaf nodes
   // that generate forward FTP flows. Iterate through the leaf nodes from
   // offset till numberOfFwdFtpFlow nodes are traversed.
+  double stopTime = traffic->GetSimulationTime ().GetSeconds ();
   for (uint32_t i = offset; i < flows + offset; i++)
     {
       // Install bulk send application on left side nodes.
@@ -88,16 +89,16 @@ CreateTraffic::CreateFwdFtpTraffic (PointToPointDumbbellHelper dumbbell, uint32_
       // Both source and sink apps are added to a single ApplicationContainer.
       // This is done to avoid the case when source starts before sink or
       // vice-versa due to random time generation.
-      ApplicationContainer sourceAndSinkApp;
-      sourceAndSinkApp.Add (ftp.Install (dumbbell.GetLeft (i)));
+      ApplicationContainer sourceApp = ftp.Install (dumbbell.GetLeft (i));
+      double startTime = GetRandomValue ();
+      sourceApp.Start (Seconds (startTime));
+      sourceApp.Stop (Seconds (stopTime - 3));
 
       PacketSinkHelper sinkHelper ("ns3::TcpSocketFactory", InetSocketAddress (dumbbell.GetRightIpv4Address (i), port1));
-
       sinkHelper.SetAttribute ("Protocol", TypeIdValue (TcpSocketFactory::GetTypeId ()));
-      sourceAndSinkApp.Add (sinkHelper.Install (dumbbell.GetRight (i)));
-
-      sourceAndSinkApp.Start (Seconds (GetRandomValue ()));
-      sourceAndSinkApp.Stop (traffic->GetSimulationTime ());
+      ApplicationContainer sinkApp = sinkHelper.Install (dumbbell.GetRight (i));
+      sinkApp.Start (Seconds (startTime));
+      sinkApp.Stop (Seconds (stopTime));
     }
 }
 
@@ -110,6 +111,7 @@ CreateTraffic::CreateRevFtpTraffic (PointToPointDumbbellHelper dumbbell, uint32_
   // offset is used to identify the starting node among right leaf nodes
   // that generate reverse FTP flows. Iterate through the leaf nodes from
   // offset till numberOfRevFtpFlow nodes are traversed.
+  double stopTime = traffic->GetSimulationTime ().GetSeconds ();
   for (uint32_t i = offset; i < flows + offset; i++)
     {
       // Install bulk send application on right side nodes.
@@ -123,16 +125,16 @@ CreateTraffic::CreateRevFtpTraffic (PointToPointDumbbellHelper dumbbell, uint32_
       // Both source and sink apps are added to a single ApplicationContainer.
       // This is done to avoid the case when source starts before sink or
       // vice-versa due to random time generation.
-      ApplicationContainer sourceAndSinkApp;
-      sourceAndSinkApp.Add (ftp.Install (dumbbell.GetRight (i)));
+      ApplicationContainer sourceApp = ftp.Install (dumbbell.GetRight (i));
+      double startTime = GetRandomValue ();
+      sourceApp.Start (Seconds (startTime));
+      sourceApp.Stop (Seconds (stopTime - 3));
 
       PacketSinkHelper sinkHelper ("ns3::TcpSocketFactory", InetSocketAddress (dumbbell.GetLeftIpv4Address (i), port1));
-
       sinkHelper.SetAttribute ("Protocol", TypeIdValue (TcpSocketFactory::GetTypeId ()));
-      sourceAndSinkApp.Add (sinkHelper.Install (dumbbell.GetLeft (i)));
-
-      sourceAndSinkApp.Start (Seconds (GetRandomValue ()));
-      sourceAndSinkApp.Stop (traffic->GetSimulationTime ());
+      ApplicationContainer sinkApp = sinkHelper.Install (dumbbell.GetLeft (i));
+      sinkApp.Start (Seconds (startTime));
+      sinkApp.Stop (Seconds (stopTime));
     }
 }
 
@@ -146,6 +148,7 @@ CreateTraffic::CreateVoiceTraffic (PointToPointDumbbellHelper dumbbell, uint32_t
   // offset is used to identify the starting node among the leaf nodes
   // that generate two-way voice traffic. Iterate through the leaf nodes from
   // offset till numberOfVoiceFlow nodes are traversed.
+  double stopTime = traffic->GetSimulationTime ().GetSeconds ();
   for (uint32_t i = offset; i < flows + offset; ++i)
     {
       OnOffHelper voiceFwd ("ns3::UdpSocketFactory",InetSocketAddress (dumbbell.GetRightIpv4Address (i), port1));
@@ -153,28 +156,29 @@ CreateTraffic::CreateVoiceTraffic (PointToPointDumbbellHelper dumbbell, uint32_t
       voiceFwd.SetAttribute ("DataRate", DataRateValue (DataRate ("64kb/s")));
       voiceFwd.SetAttribute ("OffTime",StringValue ("ns3::ConstantRandomVariable[Constant=1.35]"));
 
-      ApplicationContainer sourceAndSinkAppFwd;
-      sourceAndSinkAppFwd.Add (voiceFwd.Install (dumbbell.GetLeft (i)));
+      ApplicationContainer sourceAppFwd = voiceFwd.Install (dumbbell.GetLeft (i));
+      double startTime = GetRandomValue ();
+      sourceAppFwd.Start (Seconds (startTime));
+      sourceAppFwd.Stop (Seconds (stopTime - 3));
 
       PacketSinkHelper packetSinkFwd ("ns3::UdpSocketFactory",InetSocketAddress (dumbbell.GetRightIpv4Address (i), port1));
-      sourceAndSinkAppFwd.Add (packetSinkFwd.Install (dumbbell.GetRight (i)));
-
-      sourceAndSinkAppFwd.Start (Seconds (GetRandomValue ()));
-      sourceAndSinkAppFwd.Stop (traffic->GetSimulationTime ());
+      ApplicationContainer sinkAppFwd = packetSinkFwd.Install (dumbbell.GetRight (i));
+      sinkAppFwd.Start (Seconds (startTime));
+      sinkAppFwd.Stop (Seconds (stopTime));
 
       OnOffHelper voiceRev ("ns3::UdpSocketFactory",InetSocketAddress (dumbbell.GetLeftIpv4Address (i), port2));
       voiceRev.SetAttribute ("PacketSize",UintegerValue (172));
       voiceRev.SetAttribute ("DataRate", DataRateValue (DataRate ("64kb/s")));
       voiceRev.SetAttribute ("OffTime",StringValue ("ns3::ConstantRandomVariable[Constant=1.35]"));
 
-      ApplicationContainer sourceAndSinkAppRev;
-      sourceAndSinkAppRev.Add (voiceRev.Install (dumbbell.GetRight (i)));
+      ApplicationContainer sourceAppRev = voiceRev.Install (dumbbell.GetRight (i));
+      sourceAppRev.Start (Seconds (startTime));
+      sourceAppRev.Stop (Seconds (stopTime - 3));
 
       PacketSinkHelper packetSinkRev ("ns3::UdpSocketFactory",InetSocketAddress (dumbbell.GetLeftIpv4Address (i), port2));
-      sourceAndSinkAppRev.Add (packetSinkRev.Install (dumbbell.GetLeft (i)));
-
-      sourceAndSinkAppRev.Start (Seconds (GetRandomValue ()));
-      sourceAndSinkAppRev.Stop (traffic->GetSimulationTime ());
+      ApplicationContainer sinkAppRev = packetSinkRev.Install (dumbbell.GetLeft (i));
+      sinkAppRev.Start (Seconds (startTime));
+      sinkAppRev.Stop (Seconds (stopTime));
     }
 }
 
@@ -187,6 +191,7 @@ CreateTraffic::CreateFwdStreamingTraffic (PointToPointDumbbellHelper dumbbell, u
   // offset is used to identify the starting node among left leaf nodes
   // that generate forward streaming flows. Iterate through the leaf nodes from
   // offset till numberOfFwdStreamingFlow nodes are traversed.
+  double stopTime = traffic->GetSimulationTime ().GetSeconds ();
   for (uint32_t i = offset; i < flows + offset; ++i)
     {
       std::string streamingDataRate = to_string<double> (traffic->GetStreamingRate ()) + std::string ("Kbps");
@@ -196,14 +201,15 @@ CreateTraffic::CreateFwdStreamingTraffic (PointToPointDumbbellHelper dumbbell, u
       streaming.SetAttribute ("PacketSize",UintegerValue (traffic->GetStreamingPacketSize ()));
       streaming.SetAttribute ("DataRate", DataRateValue (DataRate (streamingDataRate)));
 
-      ApplicationContainer sourceAndSinkApp;
-      sourceAndSinkApp.Add (streaming.Install (dumbbell.GetLeft (i)));
+      ApplicationContainer sourceApp = streaming.Install (dumbbell.GetLeft (i));
+      double startTime = GetRandomValue ();
+      sourceApp.Start (Seconds (startTime));
+      sourceApp.Stop (Seconds (stopTime - 3));
 
       PacketSinkHelper packetSink ("ns3::UdpSocketFactory",InetSocketAddress (dumbbell.GetRightIpv4Address (i), port1));
-      sourceAndSinkApp.Add (packetSink.Install (dumbbell.GetRight (i)));
-
-      sourceAndSinkApp.Start (Seconds (GetRandomValue ()));
-      sourceAndSinkApp.Stop (traffic->GetSimulationTime ());
+      ApplicationContainer sinkApp = packetSink.Install (dumbbell.GetRight (i));
+      sinkApp.Start (Seconds (startTime));
+      sinkApp.Stop (Seconds (stopTime));
     }
 }
 
@@ -216,6 +222,7 @@ CreateTraffic::CreateRevStreamingTraffic (PointToPointDumbbellHelper dumbbell, u
   // offset is used to identify the starting node among right leaf nodes
   // that generate reverse streaming flows. Iterate through the leaf nodes from
   // offset till numberOfRevStreamingFlow nodes are traversed.
+  double stopTime = traffic->GetSimulationTime ().GetSeconds ();
   for (uint32_t i = offset; i < flows + offset; ++i)
     {
       std::string streamingDataRate = to_string<double> (traffic->GetStreamingRate ()) + std::string ("Kbps");
@@ -225,14 +232,15 @@ CreateTraffic::CreateRevStreamingTraffic (PointToPointDumbbellHelper dumbbell, u
       streaming.SetAttribute ("PacketSize",UintegerValue (traffic->GetStreamingPacketSize ()));
       streaming.SetAttribute ("DataRate", DataRateValue (DataRate (streamingDataRate)));
 
-      ApplicationContainer sourceAndSinkApp;
-      sourceAndSinkApp.Add (streaming.Install (dumbbell.GetRight (i)));
+      ApplicationContainer sourceApp = streaming.Install (dumbbell.GetRight (i));
+      double startTime = GetRandomValue ();
+      sourceApp.Start (Seconds (startTime));
+      sourceApp.Stop (Seconds (stopTime - 3));
 
       PacketSinkHelper packetSink ("ns3::UdpSocketFactory",InetSocketAddress (dumbbell.GetLeftIpv4Address (i), port1));
-      sourceAndSinkApp.Add (packetSink.Install (dumbbell.GetLeft (i)));
-
-      sourceAndSinkApp.Start (Seconds (GetRandomValue ()));
-      sourceAndSinkApp.Stop (traffic->GetSimulationTime ());
+      ApplicationContainer sinkApp = packetSink.Install (dumbbell.GetLeft (i));
+      sinkApp.Start (Seconds (startTime));
+      sinkApp.Stop (Seconds (stopTime));
     }
 }
 
@@ -245,6 +253,7 @@ CreateTraffic::CreateFwdFtpTrafficParking (PointToPointParkingLotHelper parkingL
   // offset is used to identify the starting node among left leaf nodes
   // that generate forward FTP flows. Iterate through the leaf nodes from
   // offset till numberOfFwdFtpFlow nodes are traversed.
+  double stopTime = traffic->GetSimulationTime ().GetSeconds ();
   for (uint32_t i = offset; i < flows + offset; ++i)
     {
       // Install bulk send application on left side nodes.
@@ -258,16 +267,16 @@ CreateTraffic::CreateFwdFtpTrafficParking (PointToPointParkingLotHelper parkingL
       // Both source and sink apps are added to a single ApplicationContainer.
       // This is done to avoid the case when source starts before sink or
       // vice-versa due to random time generation.
-      ApplicationContainer sourceAndSinkApp;
-      sourceAndSinkApp.Add (ftp.Install (parkingLot.GetLeft (i)));
+      ApplicationContainer sourceApp = ftp.Install (parkingLot.GetLeft (i));
+      double startTime = GetRandomValue ();
+      sourceApp.Start (Seconds (startTime));
+      sourceApp.Stop (Seconds (stopTime - 3));
 
       PacketSinkHelper sinkHelper ("ns3::TcpSocketFactory", InetSocketAddress (parkingLot.GetRightIpv4Address (i), port1));
-
       sinkHelper.SetAttribute ("Protocol", TypeIdValue (TcpSocketFactory::GetTypeId ()));
-      sourceAndSinkApp.Add (sinkHelper.Install (parkingLot.GetRight (i)));
-
-      sourceAndSinkApp.Start (Seconds (GetRandomValue ()));
-      sourceAndSinkApp.Stop (traffic->GetSimulationTime ());
+      ApplicationContainer sinkApp = sinkHelper.Install (parkingLot.GetRight (i));
+      sinkApp.Start (Seconds (startTime));
+      sinkApp.Stop (Seconds (stopTime));
     }
 }
 
@@ -280,6 +289,7 @@ CreateTraffic::CreateRevFtpTrafficParking (PointToPointParkingLotHelper parkingL
   // offset is used to identify the starting node among right leaf nodes
   // that generate reverse FTP flows. Iterate through the leaf nodes from
   // offset till numberOfRevFtpFlow nodes are traversed.
+  double stopTime = traffic->GetSimulationTime ().GetSeconds ();
   for (uint32_t i = offset; i < flows + offset; ++i)
     {
       AddressValue remoteAddress (InetSocketAddress (parkingLot.GetLeftIpv4Address (i), port1));
@@ -293,16 +303,16 @@ CreateTraffic::CreateRevFtpTrafficParking (PointToPointParkingLotHelper parkingL
       // Both source and sink apps are added to a single ApplicationContainer.
       // This is done to avoid the case when source starts before sink or
       // vice-versa due to random time generation.
-      ApplicationContainer sourceAndSinkApp;
-      sourceAndSinkApp.Add (ftp.Install (parkingLot.GetRight (i)));
+      ApplicationContainer sourceApp = ftp.Install (parkingLot.GetRight (i));
+      double startTime = GetRandomValue ();
+      sourceApp.Start (Seconds (startTime));
+      sourceApp.Stop (Seconds (stopTime - 3));
 
       PacketSinkHelper sinkHelper ("ns3::TcpSocketFactory", InetSocketAddress (parkingLot.GetLeftIpv4Address (i), port1));
-
       sinkHelper.SetAttribute ("Protocol", TypeIdValue (TcpSocketFactory::GetTypeId ()));
-      sourceAndSinkApp.Add (sinkHelper.Install (parkingLot.GetLeft (i)));
-
-      sourceAndSinkApp.Start (Seconds (GetRandomValue ()));
-      sourceAndSinkApp.Stop (traffic->GetSimulationTime ());
+      ApplicationContainer sinkApp = sinkHelper.Install (parkingLot.GetLeft (i));
+      sinkApp.Start (Seconds (startTime));
+      sinkApp.Stop (Seconds (stopTime));
     }
 }
 
@@ -316,6 +326,7 @@ CreateTraffic::CreateVoiceTrafficParking (PointToPointParkingLotHelper parkingLo
   // offset is used to identify the starting node among the leaf nodes
   // that generate two-way voice traffic. Iterate through the leaf nodes from
   // offset till numberOfVoiceFlow nodes are traversed.
+  double stopTime = traffic->GetSimulationTime ().GetSeconds ();
   for (uint32_t i = offset; i < flows + offset; ++i)
     {
       OnOffHelper voiceFwd ("ns3::UdpSocketFactory",InetSocketAddress (parkingLot.GetRightIpv4Address (i), port1));
@@ -323,27 +334,29 @@ CreateTraffic::CreateVoiceTrafficParking (PointToPointParkingLotHelper parkingLo
       voiceFwd.SetAttribute ("DataRate", DataRateValue (DataRate ("64kb/s")));
       voiceFwd.SetAttribute ("OffTime",StringValue ("ns3::ConstantRandomVariable[Constant=1.35]"));
 
-      ApplicationContainer sourceAndSinkAppFwd;
-      sourceAndSinkAppFwd.Add (voiceFwd.Install (parkingLot.GetLeft (i)));
+      ApplicationContainer sourceAppFwd = voiceFwd.Install (parkingLot.GetLeft (i));
+      double startTime = GetRandomValue ();
+      sourceAppFwd.Start (Seconds (startTime));
+      sourceAppFwd.Stop (Seconds (stopTime - 3));
 
       PacketSinkHelper packetSinkFwd ("ns3::UdpSocketFactory",InetSocketAddress (parkingLot.GetRightIpv4Address (i), port1));
-      sourceAndSinkAppFwd.Add (packetSinkFwd.Install (parkingLot.GetRight (i)));
-
-      sourceAndSinkAppFwd.Start (Seconds (GetRandomValue ()));
-      sourceAndSinkAppFwd.Stop (traffic->GetSimulationTime ());
+      ApplicationContainer sinkAppFwd = packetSinkFwd.Install (parkingLot.GetRight (i));
+      sinkAppFwd.Start (Seconds (startTime));
+      sinkAppFwd.Stop (Seconds (stopTime));
 
       OnOffHelper voiceRev ("ns3::UdpSocketFactory",InetSocketAddress (parkingLot.GetLeftIpv4Address (i), port2));
       voiceRev.SetAttribute ("PacketSize",UintegerValue (172));
       voiceRev.SetAttribute ("DataRate", DataRateValue (DataRate ("64kb/s")));
       voiceRev.SetAttribute ("OffTime",StringValue ("ns3::ConstantRandomVariable[Constant=1.35]"));
-      ApplicationContainer sourceAndSinkAppRev;
-      sourceAndSinkAppRev.Add (voiceRev.Install (parkingLot.GetRight (i)));
+
+      ApplicationContainer sourceAppRev = voiceRev.Install (parkingLot.GetRight (i));
+      sourceAppRev.Start (Seconds (startTime));
+      sourceAppRev.Stop (Seconds (stopTime - 3));
 
       PacketSinkHelper packetSinkRev ("ns3::UdpSocketFactory",InetSocketAddress (parkingLot.GetLeftIpv4Address (i), port2));
-      sourceAndSinkAppRev.Add (packetSinkRev.Install (parkingLot.GetLeft (i)));
-
-      sourceAndSinkAppRev.Start (Seconds (GetRandomValue ()));
-      sourceAndSinkAppRev.Stop (traffic->GetSimulationTime ());
+      ApplicationContainer sinkAppRev = packetSinkRev.Install (parkingLot.GetLeft (i));
+      sinkAppRev.Start (Seconds (startTime));
+      sinkAppRev.Stop (Seconds (stopTime));
     }
 }
 
@@ -356,6 +369,7 @@ CreateTraffic::CreateFwdStreamingTrafficParking (PointToPointParkingLotHelper pa
   // offset is used to identify the starting node among left leaf nodes
   // that generate forward streaming flows. Iterate through the leaf nodes from
   // offset till numberOfFwdStreamingFlow nodes are traversed.
+  double stopTime = traffic->GetSimulationTime ().GetSeconds ();
   for (uint32_t i = offset; i < flows + offset; ++i)
     {
       std::string streamingDataRate = to_string<double> (traffic->GetStreamingRate ()) + std::string ("Kbps");
@@ -365,14 +379,15 @@ CreateTraffic::CreateFwdStreamingTrafficParking (PointToPointParkingLotHelper pa
       streaming.SetAttribute ("PacketSize",UintegerValue (traffic->GetStreamingPacketSize ()));
       streaming.SetAttribute ("DataRate", DataRateValue (DataRate (streamingDataRate)));
 
-      ApplicationContainer sourceAndSinkApp;
-      sourceAndSinkApp.Add (streaming.Install (parkingLot.GetLeft (i)));
+      ApplicationContainer sourceApp = streaming.Install (parkingLot.GetLeft (i));
+      double startTime = GetRandomValue ();
+      sourceApp.Start (Seconds (startTime));
+      sourceApp.Stop (Seconds (stopTime - 3));
 
       PacketSinkHelper packetSink ("ns3::UdpSocketFactory",InetSocketAddress (parkingLot.GetRightIpv4Address (i), port1));
-      sourceAndSinkApp.Add (packetSink.Install (parkingLot.GetRight (i)));
-
-      sourceAndSinkApp.Start (Seconds (GetRandomValue ()));
-      sourceAndSinkApp.Stop (traffic->GetSimulationTime ());
+      ApplicationContainer sinkApp = packetSink.Install (parkingLot.GetRight (i));
+      sinkApp.Start (Seconds (startTime));
+      sinkApp.Stop (Seconds (stopTime));
     }
 }
 
@@ -385,6 +400,7 @@ CreateTraffic::CreateRevStreamingTrafficParking (PointToPointParkingLotHelper pa
   // offset is used to identify the starting node among right leaf nodes
   // that generate reverse streaming flows. Iterate through the leaf nodes from
   // offset till numberOfRevStreamingFlow nodes are traversed.
+  double stopTime = traffic->GetSimulationTime ().GetSeconds ();
   for (uint32_t i = offset; i < flows + offset; ++i)
     {
       std::string streamingDataRate = to_string<double> (traffic->GetStreamingRate ()) + std::string ("Kbps");
@@ -394,14 +410,15 @@ CreateTraffic::CreateRevStreamingTrafficParking (PointToPointParkingLotHelper pa
       streaming.SetAttribute ("PacketSize",UintegerValue (traffic->GetStreamingPacketSize ()));
       streaming.SetAttribute ("DataRate", DataRateValue (DataRate (streamingDataRate)));
 
-      ApplicationContainer sourceAndSinkApp;
-      sourceAndSinkApp.Add (streaming.Install (parkingLot.GetRight (i)));
+      ApplicationContainer sourceApp = streaming.Install (parkingLot.GetRight (i));
+      double startTime = GetRandomValue ();
+      sourceApp.Start (Seconds (startTime));
+      sourceApp.Stop (Seconds (stopTime - 3));
 
       PacketSinkHelper packetSink ("ns3::UdpSocketFactory",InetSocketAddress (parkingLot.GetLeftIpv4Address (i), port1));
-      sourceAndSinkApp.Add (packetSink.Install (parkingLot.GetLeft (i)));
-
-      sourceAndSinkApp.Start (Seconds (GetRandomValue ()));
-      sourceAndSinkApp.Stop (traffic->GetSimulationTime ());
+      ApplicationContainer sinkApp = packetSink.Install (parkingLot.GetLeft (i));
+      sinkApp.Start (Seconds (startTime));
+      sinkApp.Stop (Seconds (stopTime));
     }
 }
 
@@ -412,6 +429,7 @@ CreateTraffic::CreateCrossFtpTrafficParking (PointToPointParkingLotHelper parkin
   uint32_t port1 = 50006;
   uint32_t range = parkingLot.RouterCount () - 1;
 
+  double stopTime = traffic->GetSimulationTime ().GetSeconds ();
   for (uint32_t i = 0; i < range; ++i)
     {
       for (uint32_t j = 0; j < crossFlows; ++j)
@@ -422,16 +440,16 @@ CreateTraffic::CreateCrossFtpTrafficParking (PointToPointParkingLotHelper parkin
           ftp.SetAttribute ("Remote", remoteAddress);
           ftp.SetAttribute ("MaxBytes", UintegerValue (0));
 
-          ApplicationContainer sourceAndSinkApp;
-          sourceAndSinkApp.Add (ftp.Install (parkingLot.GetCrossSource (i,j)));
+          ApplicationContainer sourceApp = ftp.Install (parkingLot.GetCrossSource (i,j));
+          double startTime = GetRandomValue ();
+          sourceApp.Start (Seconds (startTime));
+          sourceApp.Stop (Seconds (stopTime - 3));
 
           PacketSinkHelper sinkHelper ("ns3::TcpSocketFactory", InetSocketAddress (parkingLot.GetCrossSinkIpv4Address (i, j), port1));
-
           sinkHelper.SetAttribute ("Protocol", TypeIdValue (TcpSocketFactory::GetTypeId ()));
-          sourceAndSinkApp.Add (sinkHelper.Install (parkingLot.GetCrossSink (i,j)));
-
-          sourceAndSinkApp.Start (Seconds (GetRandomValue ()));
-          sourceAndSinkApp.Stop (traffic->GetSimulationTime ());
+          ApplicationContainer sinkApp = sinkHelper.Install (parkingLot.GetCrossSink (i,j));
+          sinkApp.Start (Seconds (startTime));
+          sinkApp.Stop (Seconds (stopTime - 3));
         }
     }
 }

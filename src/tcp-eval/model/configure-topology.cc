@@ -99,13 +99,13 @@ ConfigureTopology::SetTopologyParameters (Ptr<TrafficParameters> traffic, uint32
 void
 ConfigureTopology::SetRedParameters ()
 {
-  Config::SetDefault ("ns3::RedQueue::Mode", StringValue ("QUEUE_MODE_PACKETS"));
-  Config::SetDefault ("ns3::RedQueue::MinTh", DoubleValue (0.6 * m_bottleneckBuffer));
-  Config::SetDefault ("ns3::RedQueue::MaxTh", DoubleValue (0.8 * m_bottleneckBuffer));
-  Config::SetDefault ("ns3::RedQueue::QW", DoubleValue (0.001));
-  Config::SetDefault ("ns3::RedQueue::LInterm", DoubleValue (10));
-  Config::SetDefault ("ns3::RedQueue::Gentle", BooleanValue (true));
-  Config::SetDefault ("ns3::RedQueue::QueueLimit", UintegerValue (m_bottleneckBuffer));
+  Config::SetDefault ("ns3::RedQueueDisc::Mode", StringValue ("QUEUE_MODE_PACKETS"));
+  Config::SetDefault ("ns3::RedQueueDisc::MinTh", DoubleValue (0.6 * m_bottleneckBuffer));
+  Config::SetDefault ("ns3::RedQueueDisc::MaxTh", DoubleValue (0.8 * m_bottleneckBuffer));
+  Config::SetDefault ("ns3::RedQueueDisc::QW", DoubleValue (0.001));
+  Config::SetDefault ("ns3::RedQueueDisc::LInterm", DoubleValue (10));
+  Config::SetDefault ("ns3::RedQueueDisc::Gentle", BooleanValue (true));
+  Config::SetDefault ("ns3::RedQueueDisc::QueueLimit", UintegerValue (m_bottleneckBuffer));
 }
 
 void
