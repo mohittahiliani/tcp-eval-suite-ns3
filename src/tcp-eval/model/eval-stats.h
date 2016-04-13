@@ -83,7 +83,6 @@ public:
    * \param packet Packet whose size is to be obtained
    */
   void AggregateOverInterval (Ptr<const Packet> packet);
-//  void AggregateOverInterval (Ptr<const QueueItem> queueItem);
 
   /**
    * \brief Computes the size of the queue
@@ -94,8 +93,7 @@ public:
    * \param packet To conform with the signature of the method associated with the callback.
    *
    */
-  void AggregateQueue (Ptr<const Packet> packet);
-//  void AggregateQueue (Ptr<const QueueItem> queueItem);
+  void AggregateQueue ();
 
   /**
    * \brief Writes the metrics into a file.

@@ -54,6 +54,7 @@ EvalStats::ComputeMetrics ()
   m_sumQueueLength = 0;
   m_nthSampleInInterval = 0;
   m_bytesOut = 0;
+  Simulator::Schedule (Seconds (1.0), &EvalStats::ComputeMetrics, this);
 }
 
 // Inserts the values computed in the ComputeMetrics into the file
@@ -88,10 +89,11 @@ EvalStats::AggregateOverInterval (Ptr<const Packet> packet)
 // Called during the Enqueue event at the queue.
 // Gets the number of packets in the queue and the number of times it is sampled.
 void
-EvalStats::AggregateQueue (Ptr<const Packet> packet)
+EvalStats::AggregateQueue ()
 {
   m_sumQueueLength += m_queue->GetNPackets ();
   m_nthSampleInInterval++;
+  Simulator::Schedule (Seconds (0.01), &EvalStats::AggregateQueue, this);
 }
 
 // It takes node as input and gets references to netdevice and queue in that node.
@@ -107,16 +109,12 @@ EvalStats::Install (Ptr<Node> node, Ptr<TrafficParameters> traffic)
   m_netDeviceP2p = DynamicCast<PointToPointNetDevice> (netDevice);
 
   m_queue = m_netDeviceP2p->GetQueue ();
-
   Ptr<TrafficControlLayer> tc = node->GetObject<TrafficControlLayer> ();
   m_queueDisc = tc->GetRootQueueDiscOnDevice (netDevice);
 
   m_netDeviceP2p->TraceConnectWithoutContext ("PhyTxBegin", MakeCallback (&EvalStats::AggregateOverInterval, this));
-  m_queue->TraceConnectWithoutContext ("Enqueue", MakeCallback (&EvalStats::AggregateQueue, this));
 
-  for (uint32_t i = 1; i <= m_simulationTime.ToInteger (Time::S); ++i)
-    {
-      Simulator::Schedule (Seconds (i), &EvalStats::ComputeMetrics, this);
-    }
+  Simulator::Schedule (Seconds (0.01), &EvalStats::AggregateQueue, this);
+  Simulator::Schedule (Seconds (1.0), &EvalStats::ComputeMetrics, this);
 }
 }
